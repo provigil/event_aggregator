@@ -1,11 +1,23 @@
 #!/usr/bin/env python3
 """
-nyc_events.py (updated)
+nyc_events.py (extended)
 
-- No NYC Parks call
-- No robots.txt checks
-- Output: EVENT | LINK | SOURCE in README between markers
-- Tries to be robust with NY Event Radar by using multiple heuristics and better headers
+Adds fetchers for:
+  - donyc.com
+  - Timeout (events calendar; month-aware URL configurable)
+  - SecretNYC
+  - NYC Bucket List
+
+Output remains: EVENT | LINK | SOURCE in README between markers.
+
+Dependencies:
+  pip install requests beautifulsoup4 feedparser thefuzz
+
+Env vars:
+  TIMEOUT_URL - optional, override the Timeout calendar URL (if not set it will use the current month)
+  PER_DOMAIN_DELAY - seconds between requests to same domain (default 0.8)
+  EVENT_DIGEST_USER_AGENT - custom User-Agent if desired
+  README_PATH - path to README file (default README.md)
 """
 
 from __future__ import annotations
@@ -15,6 +27,7 @@ import time
 import logging
 import json
 from dataclasses import dataclass
+from datetime import datetime
 from typing import List, Optional
 from urllib.parse import urljoin
 
@@ -32,6 +45,7 @@ MAX_RETRIES = 2
 START_MARKER = "<!-- NYC_EVENTS_START -->"
 END_MARKER = "<!-- NYC_EVENTS_END -->"
 README_PATH = os.environ.get("README_PATH", "README.md")
+TIMEOUT_URL_OVERRIDE = os.environ.get("TIMEOUT_URL")  # optional override
 
 logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO").upper(), format="%(levelname)s: %(message)s")
 logger = logging.getLogger("nyc-events")
@@ -62,7 +76,6 @@ def extract_jsonld(soup: BeautifulSoup):
             else:
                 out.append(obj)
         except Exception:
-            # some sites embed multiple objects or trailing commas; try a best-effort substring
             m = re.search(r"\{.*\}", raw, flags=re.DOTALL)
             if m:
                 try:
@@ -73,7 +86,7 @@ def extract_jsonld(soup: BeautifulSoup):
     return out
 
 def polite_get_text(url: str, params: dict = None) -> Optional[str]:
-    """Simple polite fetch: throttle + retries (no robots.txt checks)."""
+    """Simple polite fetch: throttle + retries (no robots)."""
     attempt = 0
     while attempt <= MAX_RETRIES:
         attempt += 1
@@ -95,7 +108,25 @@ def polite_get_text(url: str, params: dict = None) -> Optional[str]:
 def normalize_title(t: str) -> str:
     return re.sub(r"\s+", " ", (t or "").strip())
 
-# ---------- Source fetchers (no Parks) ----------
+def collect_anchors_by_selectors(soup: BeautifulSoup, base_url: str, selectors: List[str]) -> List[Row]:
+    out = []
+    seen = set()
+    for sel in selectors:
+        for a in soup.select(sel):
+            if not a or not a.has_attr("href"):
+                continue
+            txt = a.get_text(" ", strip=True)
+            href = urljoin(base_url, a["href"])
+            txt = normalize_title(txt)
+            if txt and len(txt) > 6:
+                key = (txt.lower(), href)
+                if key in seen:
+                    continue
+                seen.add(key)
+                out.append(Row(name=txt, link=href, source="Generic"))
+    return out
+
+# ---------- Source fetchers ----------
 
 def fetch_rss_feed(url: str, source_name: str) -> List[Row]:
     out = []
@@ -125,10 +156,9 @@ def fetch_genre_events(url: str = "https://genreevents.com/downstate-new-york/")
     rows = table.find_all("tr")
     if not rows:
         return out
-    # attempt to find first column as title
     for tr in rows[1:]:
         tds = tr.find_all("td")
-        if not tds: 
+        if not tds:
             continue
         cell = tds[0]
         a = cell.find("a", href=True)
@@ -140,17 +170,185 @@ def fetch_genre_events(url: str = "https://genreevents.com/downstate-new-york/")
     logger.info("GenreEvents -> %d items", len(out))
     return out
 
-def fetch_ny_event_radar(base_url: str = "https://ny-event-radar.com/") -> List[Row]:
+# ----------------- New site: donyc.com -----------------
+def fetch_donyc(url: str = "https://donyc.com/") -> List[Row]:
     """
-    Attempt several strategies:
-      - fetch homepage and /page/1
-      - look for JSON-LD Event objects
-      - look for <link rel='alternate' type='application/rss+xml'>
-      - fallback: find <h1/h2/h3> or anchor text with minimum length, dedupe
+    donyc.com is a blog-like site with event posts — attempt JSON-LD, RSS, and heuristics.
     """
     out = []
+    html = polite_get_text(url)
+    if not html:
+        return out
+    soup = BeautifulSoup(html, "html.parser")
+
+    # JSON-LD
+    for j in extract_jsonld(soup):
+        typ = j.get("@type") or j.get("type") or ""
+        if isinstance(typ, list):
+            typ = typ[0] if typ else ""
+        if "Event" in str(typ) or "event" in str(typ).lower() or "Article" in str(typ):
+            name = j.get("name") or j.get("headline") or ""
+            link = j.get("url") or url
+            if name:
+                out.append(Row(name=normalize_title(name), link=link, source="DoNYC (jsonld)"))
+
+    # RSS
+    # try common feed locations
+    for feed_url in ("/feed/", "/rss/", "/?feed=rss2"):
+        candidate = urljoin(url, feed_url)
+        items = fetch_rss_feed(candidate, "DoNYC")
+        if items:
+            for r in items:
+                r.source = "DoNYC (rss)"
+            out.extend(items)
+            break
+
+    # Heuristic anchors if no JSON-LD / RSS
+    if not out:
+        selectors = ["h1 a", "h2 a", "h3 a", ".entry-title a", ".post-title a", "article a"]
+        anchors = collect_anchors_by_selectors(soup, url, selectors)
+        for a in anchors:
+            a.source = "DoNYC (heuristic)"
+        out.extend(anchors)
+
+    logger.info("DoNYC -> %d items", len(out))
+    return out
+
+# ----------------- New site: Timeout events calendar -----------------
+def build_timeout_url_for_current_month() -> str:
+    """Return a Timeout events calendar URL for the current month (format used by Timeout site)."""
+    if TIMEOUT_URL_OVERRIDE:
+        return TIMEOUT_URL_OVERRIDE
+    now = datetime.utcnow()
+    # Example pattern: https://www.timeout.com/newyork/events-calendar/march-events-calendar
+    month_name = now.strftime("%B").lower()
+    return f"https://www.timeout.com/newyork/events-calendar/{month_name}-events-calendar"
+
+def fetch_timeout_calendar(url: Optional[str] = None) -> List[Row]:
+    out = []
+    if not url:
+        url = build_timeout_url_for_current_month()
+    html = polite_get_text(url)
+    if not html:
+        return out
+    soup = BeautifulSoup(html, "html.parser")
+
+    # Try JSON-LD
+    for j in extract_jsonld(soup):
+        typ = j.get("@type") or j.get("type") or ""
+        if isinstance(typ, list):
+            typ = typ[0] if typ else ""
+        if "Event" in str(typ) or "Article" in str(typ):
+            name = j.get("name") or j.get("headline") or ""
+            link = j.get("url") or url
+            if name:
+                out.append(Row(name=normalize_title(name), link=link, source="TimeOut (jsonld)"))
+
+    # Try RSS via link rel alternate
+    for link_tag in soup.select("link[rel='alternate']"):
+        t = link_tag.get("type", "")
+        if "rss" in t or "atom" in t:
+            rss = urljoin(url, link_tag.get("href"))
+            items = fetch_rss_feed(rss, "TimeOut")
+            for r in items:
+                r.source = "TimeOut (rss)"
+            out.extend(items)
+            break
+
+    # Heuristic anchors
+    selectors = [
+        ".card__content a", ".card a", ".listing a",
+        ".event-card a", ".component-article a",
+        "h2 a", "h3 a", ".kicker a", ".teaser a"
+    ]
+    anchors = collect_anchors_by_selectors(soup, url, selectors)
+    for a in anchors:
+        a.source = "TimeOut (heuristic)"
+    out.extend(anchors)
+
+    logger.info("TimeOut -> %d items from %s", len(out), url)
+    return out
+
+# ----------------- New site: SecretNYC -----------------
+def fetch_secretnyc(url: str = "https://secretnyc.co/") -> List[Row]:
+    out = []
+    html = polite_get_text(url)
+    if not html:
+        return out
+    soup = BeautifulSoup(html, "html.parser")
+
+    # JSON-LD
+    for j in extract_jsonld(soup):
+        typ = j.get("@type") or j.get("type") or ""
+        if isinstance(typ, list):
+            typ = typ[0] if typ else ""
+        if "Event" in str(typ) or "Article" in str(typ):
+            name = j.get("name") or j.get("headline") or ""
+            link = j.get("url") or url
+            if name:
+                out.append(Row(name=normalize_title(name), link=link, source="SecretNYC (jsonld)"))
+
+    # RSS
+    for feed_url in ("/feed/", "/rss/"):
+        items = fetch_rss_feed(urljoin(url, feed_url), "SecretNYC")
+        if items:
+            for r in items:
+                r.source = "SecretNYC (rss)"
+            out.extend(items)
+            break
+
+    # Heuristic anchors
+    selectors = ["h2.entry-title a", ".post-title a", ".featured a", "article a", "a[href]"]
+    anchors = collect_anchors_by_selectors(soup, url, selectors)
+    for a in anchors:
+        a.source = "SecretNYC (heuristic)"
+    out.extend(anchors)
+
+    logger.info("SecretNYC -> %d items", len(out))
+    return out
+
+# ----------------- New site: NYC Bucket List -----------------
+def fetch_nyc_bucket_list(url: str = "https://www.nycbucketlist.com/") -> List[Row]:
+    out = []
+    html = polite_get_text(url)
+    if not html:
+        return out
+    soup = BeautifulSoup(html, "html.parser")
+
+    # JSON-LD check
+    for j in extract_jsonld(soup):
+        typ = j.get("@type") or j.get("type") or ""
+        if isinstance(typ, list):
+            typ = typ[0] if typ else ""
+        if "Event" in str(typ) or "Article" in str(typ):
+            name = j.get("name") or j.get("headline") or ""
+            link = j.get("url") or url
+            if name:
+                out.append(Row(name=normalize_title(name), link=link, source="NYC Bucket List (jsonld)"))
+
+    # RSS
+    for feed_url in ("/feed/", "/?format=rss"):
+        items = fetch_rss_feed(urljoin(url, feed_url), "NYC Bucket List")
+        if items:
+            for r in items:
+                r.source = "NYC Bucket List (rss)"
+            out.extend(items)
+            break
+
+    # Heuristic anchors
+    selectors = ["h2.entry-title a", ".post a", ".article a", "article a", "a[href]"]
+    anchors = collect_anchors_by_selectors(soup, url, selectors)
+    for a in anchors:
+        a.source = "NYC Bucket List (heuristic)"
+    out.extend(anchors)
+
+    logger.info("NYC Bucket List -> %d items", len(out))
+    return out
+
+# ----------------- NY Event Radar (improved fallback kept) -----------------
+def fetch_ny_event_radar(base_url: str = "https://ny-event-radar.com/") -> List[Row]:
+    out = []
     tried_urls = [base_url, urljoin(base_url, "page/1/")]
-    # try both base and page/1
     for u in tried_urls:
         logger.debug("Trying NY Event Radar URL: %s", u)
         html = polite_get_text(u)
@@ -158,56 +356,45 @@ def fetch_ny_event_radar(base_url: str = "https://ny-event-radar.com/") -> List[
             continue
         soup = BeautifulSoup(html, "html.parser")
 
-        # 1) JSON-LD events
-        jsonlds = extract_jsonld(soup)
-        for j in jsonlds:
+        # JSON-LD
+        for j in extract_jsonld(soup):
             typ = j.get("@type") or j.get("type") or ""
             if isinstance(typ, list):
                 typ = typ[0] if typ else ""
-            if "Event" in str(typ) or "event" in str(typ).lower():
+            if "Event" in str(typ) or "Article" in str(typ):
                 name = j.get("name") or j.get("headline") or ""
                 link = j.get("url") or u
                 if name:
                     out.append(Row(name=normalize_title(name), link=link, source="NY Event Radar (jsonld)"))
 
-        # 2) check for RSS/atom link
+        # attempt RSS link
         rss_link = None
         for link_tag in soup.select("link[rel='alternate']"):
             t = link_tag.get("type", "")
             if "rss" in t or "atom" in t:
-                rss_link = link_tag.get("href")
+                rss_link = urljoin(u, link_tag.get("href"))
                 break
         if rss_link:
-            rss_link = urljoin(u, rss_link)
             logger.info("NY Event Radar RSS found: %s", rss_link)
-            out.extend(fetch_rss_feed(rss_link, "NY Event Radar"))
-            # if we found RSS, don't fallback heuristics for this page
+            items = fetch_rss_feed(rss_link, "NY Event Radar")
+            for r in items:
+                r.source = "NY Event Radar (rss)"
+            out.extend(items)
             continue
 
-        # 3) heuristic: find heading links or article titles
-        # prefer selectors commonly used by WP themes
-        candidates = []
-        for sel in ("h1 a", "h2 a", "h3 a", ".entry-title a", ".post-title a", "article a", "a[href]"):
-            for a in soup.select(sel):
-                txt = a.get_text(" ", strip=True)
-                href = a.get("href")
-                if txt and href and len(txt) > 6:
-                    candidates.append((normalize_title(txt), urljoin(u, href)))
-        # dedupe candidate anchors by title
-        seen = set()
-        for title, href in candidates:
-            if title.lower() in seen:
-                continue
-            seen.add(title.lower())
-            out.append(Row(name=title, link=href, source="NY Event Radar (heuristic)"))
+        # heading/article anchors heuristics
+        selectors = ("h1 a", "h2 a", "h3 a", ".entry-title a", ".post-title a", "article a", "a[href]")
+        anchors = collect_anchors_by_selectors(soup, u, list(selectors))
+        for a in anchors:
+            a.source = "NY Event Radar (heuristic)"
+        out.extend(anchors)
 
-        # if any rows found on this page, we can stop trying other pages
         if out:
             break
 
     logger.info("NY Event Radar -> %d items", len(out))
     if not out:
-        logger.warning("NY Event Radar: no items found — likely JS-rendered or uses different endpoint")
+        logger.warning("NY Event Radar: no items found — possibly JS-rendered or using API endpoints.")
     return out
 
 # ---------- Dedupe ----------
@@ -217,7 +404,6 @@ def dedupe_rows(rows: List[Row]) -> List[Row]:
     for r in rows:
         if r.link and r.link in seen_links:
             continue
-        # fuzzy dedupe by title with very high threshold
         is_dup = False
         for u in uniques:
             if r.link and u.link and r.link == u.link:
@@ -236,7 +422,7 @@ def dedupe_rows(rows: List[Row]) -> List[Row]:
 
 # ---------- README update ----------
 def update_readme(rows: List[Row]):
-    now = time.strftime("%Y-%m-%d")
+    now = datetime.utcnow().strftime("%Y-%m-%d")
     lines = []
     lines.append(f"### NYC Event Digest (Updated: {now})")
     lines.append(f"*Found {len(rows)} unique events.*")
@@ -271,7 +457,7 @@ def update_readme(rows: List[Row]):
 
 # ---------- Orchestrator ----------
 def main():
-    logger.info("Starting aggregator (no parks, no robots).")
+    logger.info("Starting aggregator (extended sources).")
     rows: List[Row] = []
 
     # RSS
@@ -281,7 +467,13 @@ def main():
     # HTML tables
     rows.extend(fetch_genre_events())
 
-    # NY Event Radar (try heuristics)
+    # Additional sites requested
+    rows.extend(fetch_donyc("https://donyc.com/"))
+    rows.extend(fetch_timeout_calendar())  # uses current month or TIMEOUT_URL override
+    rows.extend(fetch_secretnyc("https://secretnyc.co/"))
+    rows.extend(fetch_nyc_bucket_list("https://www.nycbucketlist.com/"))
+
+    # NY Event Radar (keep the improved heuristics)
     rows.extend(fetch_ny_event_radar())
 
     logger.info("Collected rows before dedupe: %d", len(rows))
