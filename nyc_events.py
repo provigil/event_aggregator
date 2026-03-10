@@ -1,9 +1,10 @@
-import os
 import requests
 from bs4 import BeautifulSoup
 import feedparser
 from datetime import datetime, timedelta
 from thefuzz import fuzz
+import re
+import os
 
 # --- CONFIG & DATE LOGIC ---
 def get_milestone_dates():
@@ -22,7 +23,6 @@ def deduplicate(events, threshold=85):
     for new_event in events:
         is_duplicate = False
         for existing in unique_list:
-            # Match similarity and date
             score = fuzz.token_sort_ratio(new_event['name'], existing['name'])
             if score > threshold and new_event['date'] == existing['date']:
                 is_duplicate = True
@@ -75,7 +75,6 @@ def fetch_genre_events():
     try:
         r = requests.get(url, timeout=10)
         soup = BeautifulSoup(r.text, 'html.parser')
-        # This targets the specific table structure on GenreEvents
         for row in soup.select('table tr')[1:]:
             cols = row.find_all('td')
             if len(cols) >= 2:
@@ -94,7 +93,6 @@ def fetch_ny_event_radar():
     try:
         r = requests.get(url, timeout=10)
         soup = BeautifulSoup(r.text, 'html.parser')
-        # Target the post-title links which usually hold the event names
         for item in soup.select('.entry-title a'):
             events.append({
                 'name': item.text.strip(),
@@ -105,57 +103,64 @@ def fetch_ny_event_radar():
     except: pass
     return events
 
-# --- MAIN EXECUTION ---
-
-def main():
-    start_date, end_date = get_milestone_dates()
-    all_raw_events = []
-
-    # 1. API Calls
-    all_raw_events.extend(fetch_parks_api(start_date, end_date))
-
-    # 2. RSS Feeds
-    all_raw_events.extend(fetch_rss_source("https://www.theskint.com/feed/", "The Skint", end_date))
-    all_raw_events.extend(fetch_rss_source("https://www.thrillist.com/rss/locations/new-york", "Thrillist", end_date))
-
-    # 3. Lite Scrapes
-    all_raw_events.extend(fetch_genre_events())
-    all_raw_events.extend(fetch_ny_event_radar())
-
-    # 4. Deduplicate
-    final_list = deduplicate(all_raw_events)
-
-    # 5. Send via SendGrid
-    if final_list:
-        send_email(final_list, end_date)
-    else:
-        print("No events found for this period.")
+# --- README UPDATE LOGIC ---
 
 def update_readme(events, target_date):
-    if not events:
-        return
-
-    # 1. Create the new table string
+    # 1. Generate the Table string
     new_content = f"\n### NYC Event Digest (Updated: {datetime.now().strftime('%Y-%m-%d')})\n"
-    new_content += f"**Targeting events through: {target_date.strftime('%B %d')}**\n\n"
-    new_content += "| Event | Date | Location | Link |\n"
-    new_content += "| :--- | :--- | :--- | :--- |\n"
+    new_content += f"**Events through: {target_date.strftime('%B %d')}**\n\n"
+    new_content += "| Event | Date | Location | Link |\n| :--- | :--- | :--- | :--- |\n"
     for e in events:
         new_content += f"| {e['name']} | {e['date']} | {e['loc']} | [Link]({e['link']}) |\n"
     new_content += "\n"
 
-    # 2. Read the existing README
+    # 2. Read existing README
+    if not os.path.exists("README.md"):
+        # Create a blank README with markers if it doesn't exist
+        with open("README.md", "w") as f:
+            f.write("\n")
+    
     with open("README.md", "r") as f:
-        readme = f.read()
-
-    # 3. Replace the content between markers
-    import re
+        content = f.read()
+    
+    # 3. Use markers to replace only the relevant section
     pattern = r".*?"
     replacement = f"{new_content}"
     
-    updated_readme = re.sub(pattern, replacement, readme, flags=re.DOTALL)
+    # Check if markers exist
+    if "" not in content:
+        print("Error: Could not find marker in README.md")
+        return
 
-    # 4. Save it back
+    updated_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+
+    # 4. Save
     with open("README.md", "w") as f:
-        f.write(updated_readme)
-    print("README.md updated successfully.")
+        f.write(updated_content)
+    print("README.md has been updated.")
+
+# --- MAIN EXECUTION ---
+
+if __name__ == "__main__":
+    start_date, end_date = get_milestone_dates()
+    all_raw_events = []
+
+    print(f"Scraping events between {start_date.date()} and {end_date.date()}...")
+
+    # 1. API & RSS
+    all_raw_events.extend(fetch_parks_api(start_date, end_date))
+    all_raw_events.extend(fetch_rss_source("https://www.theskint.com/feed/", "The Skint", end_date))
+    all_raw_events.extend(fetch_rss_source("https://www.thrillist.com/rss/locations/new-york", "Thrillist", end_date))
+
+    # 2. Lite Scrapes
+    all_raw_events.extend(fetch_genre_events())
+    all_raw_events.extend(fetch_ny_event_radar())
+
+    # 3. Deduplicate
+    final_list = deduplicate(all_raw_events)
+
+    # 4. Update the File
+    if final_list:
+        update_readme(final_list, end_date)
+    else:
+        print("No events found.")
