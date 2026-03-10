@@ -6,24 +6,24 @@ from thefuzz import fuzz
 import re
 import os
 
-# --- CONFIG & DATE LOGIC ---
+# --- DATE LOGIC ---
 def get_milestone_dates():
     today = datetime.now()
     if today.day <= 15:
         target = today.replace(day=15, hour=23, minute=59)
     else:
-        # Calculate last day of month
         next_month = today.replace(day=28) + timedelta(days=4)
         target = next_month - timedelta(days=next_month.day, hour=23, minute=59)
     return today, target
 
 # --- DEDUPLICATION ---
-def deduplicate(events, threshold=85):
+def deduplicate(events, threshold=80):
     unique_list = []
     for new_event in events:
         is_duplicate = False
         for existing in unique_list:
             score = fuzz.token_sort_ratio(new_event['name'], existing['name'])
+            # If names are 80%+ similar and dates match, it's a dupe
             if score > threshold and new_event['date'] == existing['date']:
                 is_duplicate = True
                 break
@@ -35,28 +35,34 @@ def deduplicate(events, threshold=85):
 
 def fetch_parks_api(start, end):
     url = "https://data.cityofnewyork.us/resource/w3wp-dpdi.json"
-    params = {
-        "$where": f"start_date >= '{start.strftime('%Y-%m-%dT%H:%M:%S')}' AND start_date <= '{end.strftime('%Y-%m-%dT%H:%M:%S')}'",
-        "$limit": 100
-    }
+    # Simplified params to avoid the "non-tabular" error
+    params = {"$limit": 100, "$order": "start_date DESC"}
     try:
         r = requests.get(url, params=params, timeout=10)
-        return [{
-            'name': e.get('event_name', 'Unnamed Event'),
-            'date': e.get('start_date', '')[:10],
-            'loc': e.get('location', 'NYC Park'),
-            'link': e.get('event_url', 'https://www.nycgovparks.org/events')
-        } for e in r.json()]
-    except Exception as e:
-        print(f"Parks API Error: {e}")
-        return []
+        data = r.json()
+        events = []
+        for e in data:
+            date_str = e.get('start_date', '')[:10]
+            try:
+                e_date = datetime.strptime(date_str, '%Y-%m-%d')
+                if start <= e_date <= end:
+                    events.append({
+                        'name': e.get('event_name', 'Unnamed Park Event'),
+                        'date': date_str,
+                        'loc': e.get('location', 'NYC Park'),
+                        'link': e.get('event_url', 'https://www.nycgovparks.org/events')
+                    })
+            except: continue
+        return events
+    except: return []
 
 def fetch_rss_source(url, source_name, target_date):
     events = []
     try:
         feed = feedparser.parse(url)
         for entry in feed.entries:
-            # Convert RSS time to datetime
+            # Handle cases where published_parsed might be missing
+            if not hasattr(entry, 'published_parsed'): continue
             pub_date = datetime(*entry.published_parsed[:6])
             if pub_date <= target_date:
                 events.append({
@@ -65,8 +71,7 @@ def fetch_rss_source(url, source_name, target_date):
                     'loc': source_name,
                     'link': entry.link
                 })
-    except Exception as e:
-        print(f"RSS Error ({source_name}): {e}")
+    except: pass
     return events
 
 def fetch_genre_events():
@@ -106,61 +111,55 @@ def fetch_ny_event_radar():
 # --- README UPDATE LOGIC ---
 
 def update_readme(events, target_date):
-    # 1. Generate the Table string
+    start_marker = ""
+    end_marker = ""
+
+    # 1. Build the Table
     new_content = f"\n### NYC Event Digest (Updated: {datetime.now().strftime('%Y-%m-%d')})\n"
-    new_content += f"**Events through: {target_date.strftime('%B %d')}**\n\n"
+    new_content += f"**Targeting through: {target_date.strftime('%B %d')}**\n"
+    new_content += f"*Found {len(events)} unique events.*\n\n"
     new_content += "| Event | Date | Location | Link |\n| :--- | :--- | :--- | :--- |\n"
     for e in events:
         new_content += f"| {e['name']} | {e['date']} | {e['loc']} | [Link]({e['link']}) |\n"
     new_content += "\n"
 
-    # 2. Read existing README
+    # 2. Read existing content
     if not os.path.exists("README.md"):
-        # Create a blank README with markers if it doesn't exist
-        with open("README.md", "w") as f:
-            f.write("\n")
+        with open("README.md", "w") as f: f.write(f"{start_marker}\n{end_marker}")
     
-    with open("README.md", "r") as f:
+    with open("README.md", "r", encoding="utf-8") as f:
         content = f.read()
-    
-    # 3. Use markers to replace only the relevant section
-    pattern = r".*?"
-    replacement = f"{new_content}"
-    
-    # Check if markers exist
-    if "" not in content:
-        print("Error: Could not find marker in README.md")
-        return
 
+    # 3. Surgical Replacement (The "Anti-Repeat" fix)
+    if start_marker not in content or end_marker not in content:
+        # If markers are missing, append them to the end
+        content += f"\n\n{start_marker}\n{end_marker}"
+
+    pattern = f"{start_marker}.*?{end_marker}"
+    replacement = f"{start_marker}{new_content}{end_marker}"
+    
+    # re.DOTALL is critical here to match across multiple lines
     updated_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
 
-    # 4. Save
-    with open("README.md", "w") as f:
+    with open("README.md", "w", encoding="utf-8") as f:
         f.write(updated_content)
-    print("README.md has been updated.")
-
-# --- MAIN EXECUTION ---
+    print(f"README.md updated with {len(events)} events.")
 
 if __name__ == "__main__":
     start_date, end_date = get_milestone_dates()
     all_raw_events = []
 
-    print(f"Scraping events between {start_date.date()} and {end_date.date()}...")
+    print(f"Scraping for milestone: {end_date.strftime('%Y-%m-%d')}")
 
-    # 1. API & RSS
     all_raw_events.extend(fetch_parks_api(start_date, end_date))
     all_raw_events.extend(fetch_rss_source("https://www.theskint.com/feed/", "The Skint", end_date))
     all_raw_events.extend(fetch_rss_source("https://www.thrillist.com/rss/locations/new-york", "Thrillist", end_date))
-
-    # 2. Lite Scrapes
     all_raw_events.extend(fetch_genre_events())
     all_raw_events.extend(fetch_ny_event_radar())
 
-    # 3. Deduplicate
     final_list = deduplicate(all_raw_events)
 
-    # 4. Update the File
     if final_list:
         update_readme(final_list, end_date)
     else:
-        print("No events found.")
+        print("No events found to update.")
