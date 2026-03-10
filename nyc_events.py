@@ -133,21 +133,31 @@ def main():
     else:
         print("No events found for this period.")
 
-def update_markdown_file(events, target_date):
+def update_readme(events, target_date):
     if not events:
         return
 
-    # Create Markdown Table
-    header = f"# NYC Event Digest (Updated: {datetime.now().strftime('%Y-%m-%d')})\n"
-    header += f"**Targeting events through: {target_date.strftime('%B %d')}**\n\n"
-    
-    table = "| Event | Date | Location | Link |\n"
-    table += "| :--- | :--- | :--- | :--- |\n"
-    
+    # 1. Create the new table string
+    new_content = f"\n### NYC Event Digest (Updated: {datetime.now().strftime('%Y-%m-%d')})\n"
+    new_content += f"**Targeting events through: {target_date.strftime('%B %d')}**\n\n"
+    new_content += "| Event | Date | Location | Link |\n"
+    new_content += "| :--- | :--- | :--- | :--- |\n"
     for e in events:
-        table += f"| {e['name']} | {e['date']} | {e['loc']} | [Link]({e['link']}) |\n"
+        new_content += f"| {e['name']} | {e['date']} | {e['loc']} | [Link]({e['link']}) |\n"
+    new_content += "\n"
 
-    # Save to a file named events.md
-    with open("events.md", "w") as f:
-        f.write(header + table)
-    print("Markdown file generated.")
+    # 2. Read the existing README
+    with open("README.md", "r") as f:
+        readme = f.read()
+
+    # 3. Replace the content between markers
+    import re
+    pattern = r".*?"
+    replacement = f"{new_content}"
+    
+    updated_readme = re.sub(pattern, replacement, readme, flags=re.DOTALL)
+
+    # 4. Save it back
+    with open("README.md", "w") as f:
+        f.write(updated_readme)
+    print("README.md updated successfully.")
