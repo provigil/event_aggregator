@@ -4,8 +4,6 @@ from bs4 import BeautifulSoup
 import feedparser
 from datetime import datetime, timedelta
 from thefuzz import fuzz
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
 
 # --- CONFIG & DATE LOGIC ---
 def get_milestone_dates():
