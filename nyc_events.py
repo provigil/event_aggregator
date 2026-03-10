@@ -133,47 +133,21 @@ def main():
     else:
         print("No events found for this period.")
 
-def send_email(events, target_date):
-    rows = ""
+def update_markdown_file(events, target_date):
+    if not events:
+        return
+
+    # Create Markdown Table
+    header = f"# NYC Event Digest (Updated: {datetime.now().strftime('%Y-%m-%d')})\n"
+    header += f"**Targeting events through: {target_date.strftime('%B %d')}**\n\n"
+    
+    table = "| Event | Date | Location | Link |\n"
+    table += "| :--- | :--- | :--- | :--- |\n"
+    
     for e in events:
-        rows += f"""
-        <tr>
-            <td style="padding:8px; border:1px solid #ddd;">{e['name']}</td>
-            <td style="padding:8px; border:1px solid #ddd;">{e['date']}</td>
-            <td style="padding:8px; border:1px solid #ddd;">{e['loc']}</td>
-            <td style="padding:8px; border:1px solid #ddd;"><a href="{e['link']}">View</a></td>
-        </tr>"""
+        table += f"| {e['name']} | {e['date']} | {e['loc']} | [Link]({e['link']}) |\n"
 
-    html_body = f"""
-    <html>
-    <body style="font-family: Arial, sans-serif;">
-        <h2>NYC Event Digest (Through {target_date.strftime('%B %d')})</h2>
-        <table style="width:100%; border-collapse: collapse;">
-            <tr style="background-color: #f2f2f2;">
-                <th style="padding:8px; border:1px solid #ddd; text-align:left;">Event</th>
-                <th style="padding:8px; border:1px solid #ddd; text-align:left;">Date</th>
-                <th style="padding:8px; border:1px solid #ddd; text-align:left;">Source/Location</th>
-                <th style="padding:8px; border:1px solid #ddd; text-align:left;">Link</th>
-            </tr>
-            {rows}
-        </table>
-    </body>
-    </html>
-    """
-
-    message = Mail(
-        from_email=os.environ.get('SENDER_EMAIL'),
-        to_emails=os.environ.get('RECEIVER_EMAIL'),
-        subject=f"NYC Events Digest: {datetime.now().strftime('%m/%d')} Milestone",
-        html_content=html_body
-    )
-
-    try:
-        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-        sg.send(message)
-        print("Email sent successfully!")
-    except Exception as e:
-        print(f"Error sending email: {e}")
-
-if __name__ == "__main__":
-    main()
+    # Save to a file named events.md
+    with open("events.md", "w") as f:
+        f.write(header + table)
+    print("Markdown file generated.")
