@@ -41,12 +41,23 @@ def fetch_parks_api(start, end):
     }
     try:
         r = requests.get(url, params=params, timeout=10)
-        return [{
-            'name': e.get('event_name', 'Unnamed Event'),
-            'date': e.get('start_date', '')[:10],
-            'loc': e.get('location', 'NYC Park'),
-            'link': e.get('event_url', 'https://www.nycgovparks.org/events')
-        } for e in r.json()]
+        data = r.json()
+        
+        # Check if the API returned a list of dictionaries
+        if not isinstance(data, list):
+            print(f"Parks API returned unexpected format: {data}")
+            return []
+
+        events = []
+        for e in data:
+            if isinstance(e, dict): # Ensure each item is a dictionary
+                events.append({
+                    'name': e.get('event_name', 'Unnamed Event'),
+                    'date': e.get('start_date', '')[:10],
+                    'loc': e.get('location', 'NYC Park'),
+                    'link': e.get('event_url', 'https://www.nycgovparks.org/events')
+                })
+        return events
     except Exception as e:
         print(f"Parks API Error: {e}")
         return []
@@ -106,38 +117,35 @@ def fetch_ny_event_radar():
 # --- README UPDATE LOGIC ---
 
 def update_readme(events, target_date):
-    # 1. Generate the Table string
-    new_content = f"\n### NYC Event Digest (Updated: {datetime.now().strftime('%Y-%m-%d')})\n"
-    new_content += f"**Events through: {target_date.strftime('%B %d')}**\n\n"
-    new_content += "| Event | Date | Location | Link |\n| :--- | :--- | :--- | :--- |\n"
+    # 1. Generate the Table
+    new_table = f"\n### NYC Event Digest (Updated: {datetime.now().strftime('%Y-%m-%d')})\n"
+    new_table += f"**Events through: {target_date.strftime('%B %d')}**\n\n"
+    new_table += "| Event | Date | Location | Link |\n| :--- | :--- | :--- | :--- |\n"
     for e in events:
-        new_content += f"| {e['name']} | {e['date']} | {e['loc']} | [Link]({e['link']}) |\n"
-    new_content += "\n"
+        new_table += f"| {e['name']} | {e['date']} | {e['loc']} | [Link]({e['link']}) |\n"
+    new_table += "\n"
 
-    # 2. Read existing README
-    if not os.path.exists("README.md"):
-        # Create a blank README with markers if it doesn't exist
-        with open("README.md", "w") as f:
-            f.write("\n")
-    
-    with open("README.md", "r") as f:
+    # 2. Open README
+    with open("README.md", "r", encoding="utf-8") as f:
         content = f.read()
+
+    # 3. Securely Replace
+    start_marker = ""
+    end_marker = ""
     
-    # 3. Use markers to replace only the relevant section
-    pattern = r".*?"
-    replacement = f"{new_content}"
-    
-    # Check if markers exist
-    if "" not in content:
-        print("Error: Could not find marker in README.md")
+    if start_marker not in content or end_marker not in content:
+        print("Error: Markers not found. Check README.md for ")
         return
 
-    updated_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+    # Using a simpler string split/join to avoid Regex multi-line issues
+    pre_content = content.split(start_marker)[0]
+    post_content = content.split(end_marker)[1]
+    
+    updated_content = f"{pre_content}{start_marker}{new_table}{end_marker}{post_content}"
 
-    # 4. Save
-    with open("README.md", "w") as f:
+    with open("README.md", "w", encoding="utf-8") as f:
         f.write(updated_content)
-    print("README.md has been updated.")
+    print("README.md has been successfully updated and overwritten.")
 
 # --- MAIN EXECUTION ---
 
