@@ -8,6 +8,11 @@ on:
 permissions:
   contents: write  # Crucial for allowing the bot to save files
 
+env:
+  # Optional: set a friendly user-agent for feed/API calls
+  EVENT_DIGEST_USER_AGENT: "NYCEventDigestBot/1.0 (+contact:you@example.com)"
+  LOG_LEVEL: "INFO"
+
 jobs:
   scrape_and_update:
     runs-on: ubuntu-latest
@@ -24,7 +29,22 @@ jobs:
         run: |
           pip install requests beautifulsoup4 feedparser thefuzz python-Levenshtein
 
+      - name: Ensure README markers exist
+        # Adds unique markers the script expects if they are missing.
+        run: |
+          START="<!-- NYC_EVENTS_START -->"
+          END="<!-- NYC_EVENTS_END -->"
+          if [ ! -f README.md ]; then
+            printf "%s\n%s\n" "$START" "$END" > README.md
+          else
+            if ! grep -q "$START" README.md || ! grep -q "$END" README.md; then
+              # Append markers at end of file (keeps existing content)
+              printf "\n\n%s\n%s\n" "$START" "$END" >> README.md
+            fi
+          fi
+
       - name: Run Scraper
+        # If you named the new script differently, change this line.
         run: python nyc_events.py
 
       - name: Commit and Push Changes
