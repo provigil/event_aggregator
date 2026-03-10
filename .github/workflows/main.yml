@@ -2,29 +2,29 @@ name: Bi-Monthly NYC Event Digest
 
 on:
   schedule:
-    # Runs at 00:00 on the 1st and 15th of every month
+    # Runs at midnight on the 1st and 15th of every month
     - cron: '0 0 1,15 * *'
-  workflow_dispatch: # Allows you to run it manually for testing
+  workflow_dispatch: # Allows you to trigger it manually for testing
 
 jobs:
-  build:
+  scrape_and_mail:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
-          pip install requests beautifulsoup4 feedparser
+          pip install requests beautifulsoup4 feedparser sendgrid thefuzz python-Levenshtein
 
-      - name: Run Scraper
+      - name: Run Scraper Script
         env:
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
           RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
         run: python nyc_events.py
