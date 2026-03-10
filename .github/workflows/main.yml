@@ -2,15 +2,17 @@ name: Bi-Monthly NYC Event Digest
 
 on:
   schedule:
-    # Runs at midnight on the 1st and 15th of every month
     - cron: '0 0 1,15 * *'
-  workflow_dispatch: # Allows you to trigger it manually for testing
+  workflow_dispatch:
+
+permissions:
+  contents: write  # Crucial for allowing the bot to save files
 
 jobs:
-  scrape_and_mail:
+  scrape_and_update:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -19,12 +21,15 @@ jobs:
           python-version: '3.10'
 
       - name: Install Dependencies
-        run: |
-          pip install requests beautifulsoup4 feedparser sendgrid thefuzz python-Levenshtein
+        run: pip install requests beautifulsoup4 feedparser thefuzz python-Levenshtein
 
-      - name: Run Scraper Script
-        env:
-          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
-          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+      - name: Run Scraper
         run: python nyc_events.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "GitHub Action Bot"
+          git config --global user.email "actions@github.com"
+          git add events.md
+          git commit -m "Update event list: $(date +'%Y-%m-%d')" || exit 0
+          git push
