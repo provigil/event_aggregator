@@ -1,440 +1,437 @@
 #!/usr/bin/env python3
 """
-nyc_events.py (extended)
+nyc_events.py (lightweight, source-robust)
 
-Adds fetchers for:
-  - donyc.com
-  - Timeout (events calendar; month-aware URL configurable)
-  - SecretNYC
-  - NYC Bucket List
+Output table: EVENT | LINK | SOURCE
 
-Output remains: EVENT | LINK | SOURCE in README between markers.
+Key improvements:
+- Time Out: selects month page from the Time Out events calendar hub, then extracts many items.
+- NYPL: scrapes /events/calendar (paginated) for event titles + links.
+- DoNYC: if direct fetch gets 403, optionally fallback to Google News RSS 'site:donyc.com when:30d'
+- Thrillist: old RSS is 404; optional fallback to Google News RSS 'site:thrillist.com when:30d'
+- SecretNYC: scrape /things-to-do/ listing pages instead of relying on RSS.
+- Bucket Listers: scrape NYC explore page.
 
 Dependencies:
-  pip install requests beautifulsoup4 feedparser thefuzz
-
-Env vars:
-  TIMEOUT_URL - optional, override the Timeout calendar URL (if not set it will use the current month)
-  PER_DOMAIN_DELAY - seconds between requests to same domain (default 0.8)
-  EVENT_DIGEST_USER_AGENT - custom User-Agent if desired
-  README_PATH - path to README file (default README.md)
+  pip install requests beautifulsoup4 feedparser thefuzz python-Levenshtein
 """
 
 from __future__ import annotations
+
 import os
 import re
 import time
 import logging
-import json
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional
-from urllib.parse import urljoin
+from typing import List, Optional, Iterable, Dict
+from urllib.parse import urljoin, urlparse, quote_plus
 
 import requests
 from bs4 import BeautifulSoup
 import feedparser
 from thefuzz import fuzz
 
-# ---------- Config ----------
-USER_AGENT = os.environ.get("EVENT_DIGEST_USER_AGENT", "NYCEventDigestBot/1.0 (+contact:you@example.com)")
-REQUEST_TIMEOUT = 15
-PER_DOMAIN_DELAY = float(os.environ.get("PER_DOMAIN_DELAY", "0.8"))
-MAX_RETRIES = 2
+# ------------------ Configuration ------------------
 
+README_PATH = os.environ.get("README_PATH", "README.md")
 START_MARKER = "<!-- NYC_EVENTS_START -->"
 END_MARKER = "<!-- NYC_EVENTS_END -->"
-README_PATH = os.environ.get("README_PATH", "README.md")
-TIMEOUT_URL_OVERRIDE = os.environ.get("TIMEOUT_URL")  # optional override
 
-logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO").upper(), format="%(levelname)s: %(message)s")
+# Keep it lightweight: bound how much we crawl per big source.
+NYPL_PAGES = int(os.environ.get("NYPL_PAGES", "2"))          # 1-3 recommended
+SECRETNYC_PAGES = int(os.environ.get("SECRETNYC_PAGES", "1"))  # 1-2 recommended
+
+ENABLE_GOOGLE_NEWS_FALLBACKS = os.environ.get("ENABLE_GOOGLE_NEWS_FALLBACKS", "1") == "1"
+
+REQUEST_TIMEOUT_S = int(os.environ.get("REQUEST_TIMEOUT_S", "20"))
+PER_DOMAIN_DELAY_S = float(os.environ.get("PER_DOMAIN_DELAY_S", "0.8"))
+MAX_RETRIES = int(os.environ.get("MAX_RETRIES", "2"))
+
+# Use a browser-like UA for compatibility (does not guarantee bypass of 403 bot blocks).
+USER_AGENT = os.environ.get(
+    "EVENT_DIGEST_USER_AGENT",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+)
+
+LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
+logging.basicConfig(level=LOG_LEVEL, format="%(levelname)s: %(message)s")
 logger = logging.getLogger("nyc-events")
 
 session = requests.Session()
-session.headers.update({"User-Agent": USER_AGENT, "Accept-Language": "en-US,en;q=0.9", "Accept": "text/html,application/xhtml+xml"})
+session.headers.update({
+    "User-Agent": USER_AGENT,
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+})
 
-def throttle_sleep(domain_delay=PER_DOMAIN_DELAY):
-    time.sleep(domain_delay)
+_last_request_by_domain: Dict[str, float] = {}
 
-@dataclass
+@dataclass(frozen=True)
 class Row:
     name: str
     link: str
     source: str
 
-# ---------- Helpers ----------
-def extract_jsonld(soup: BeautifulSoup):
-    out = []
-    for s in soup.find_all("script", {"type": "application/ld+json"}):
-        raw = s.string
-        if not raw:
-            continue
-        try:
-            obj = json.loads(raw)
-            if isinstance(obj, list):
-                out.extend(obj)
-            else:
-                out.append(obj)
-        except Exception:
-            m = re.search(r"\{.*\}", raw, flags=re.DOTALL)
-            if m:
-                try:
-                    obj = json.loads(m.group(0))
-                    out.append(obj)
-                except Exception:
-                    continue
-    return out
+# ------------------ HTTP helpers ------------------
 
-def polite_get_text(url: str, params: dict = None) -> Optional[str]:
-    """Simple polite fetch: throttle + retries (no robots)."""
+def _domain(url: str) -> str:
+    try:
+        return urlparse(url).netloc.lower()
+    except Exception:
+        return ""
+
+def _throttle(url: str):
+    d = _domain(url)
+    if not d:
+        time.sleep(PER_DOMAIN_DELAY_S)
+        return
+    last = _last_request_by_domain.get(d)
+    now = time.time()
+    if last is not None:
+        wait = PER_DOMAIN_DELAY_S - (now - last)
+        if wait > 0:
+            time.sleep(wait)
+    _last_request_by_domain[d] = time.time()
+
+def fetch_url(url: str, params: dict | None = None, headers: dict | None = None) -> Optional[requests.Response]:
     attempt = 0
     while attempt <= MAX_RETRIES:
         attempt += 1
         try:
-            throttle_sleep()
-            resp = session.get(url, params=params, timeout=REQUEST_TIMEOUT)
+            _throttle(url)
+            resp = session.get(url, params=params, headers=headers, timeout=REQUEST_TIMEOUT_S)
             if 200 <= resp.status_code < 300:
-                return resp.text
+                return resp
             if 400 <= resp.status_code < 500:
                 logger.warning("HTTP %s for %s", resp.status_code, url)
-                return None
-            logger.warning("Server error %s for %s (attempt %d)", resp.status_code, url, attempt)
+                return resp  # caller may want to branch on 403/404
+            logger.warning("HTTP %s for %s (attempt %d)", resp.status_code, url, attempt)
         except requests.RequestException as e:
             logger.warning("Request error for %s: %s (attempt %d)", url, e, attempt)
-        time.sleep(0.5 * (2 ** (attempt - 1)))
+        time.sleep(0.6 * (2 ** (attempt - 1)))
     logger.error("Failed to fetch %s after retries", url)
     return None
 
-def normalize_title(t: str) -> str:
-    return re.sub(r"\s+", " ", (t or "").strip())
+def soup_from(url: str, params: dict | None = None) -> Optional[BeautifulSoup]:
+    resp = fetch_url(url, params=params)
+    if not resp or not resp.text:
+        return None
+    return BeautifulSoup(resp.text, "html.parser")
 
-def collect_anchors_by_selectors(soup: BeautifulSoup, base_url: str, selectors: List[str]) -> List[Row]:
-    out = []
+def normalize_text(s: str) -> str:
+    s = (s or "").strip()
+    s = re.sub(r"\s+", " ", s)
+    return s
+
+# ------------------ Extraction helpers ------------------
+
+def extract_links(
+    soup: BeautifulSoup,
+    base_url: str,
+    selectors: Iterable[str],
+    source: str,
+    max_items: int = 80,
+    deny_text: set[str] | None = None,
+    deny_href_substrings: Iterable[str] = (),
+) -> List[Row]:
+    deny_text = deny_text or set()
+    rows: List[Row] = []
     seen = set()
+
     for sel in selectors:
         for a in soup.select(sel):
             if not a or not a.has_attr("href"):
                 continue
-            txt = a.get_text(" ", strip=True)
+            name = normalize_text(a.get_text(" ", strip=True))
+            if not name or len(name) < 7:
+                continue
+            if name.lower() in deny_text:
+                continue
+
             href = urljoin(base_url, a["href"])
-            txt = normalize_title(txt)
-            if txt and len(txt) > 6:
-                key = (txt.lower(), href)
-                if key in seen:
-                    continue
-                seen.add(key)
-                out.append(Row(name=txt, link=href, source="Generic"))
-    return out
+            if any(bad in href for bad in deny_href_substrings):
+                continue
 
-# ---------- Source fetchers ----------
+            key = (name.lower(), href)
+            if key in seen:
+                continue
+            seen.add(key)
 
-def fetch_rss_feed(url: str, source_name: str) -> List[Row]:
-    out = []
-    logger.debug("Fetching RSS feed: %s", url)
-    text = polite_get_text(url)
-    if not text:
-        return out
-    feed = feedparser.parse(text)
-    for e in getattr(feed, "entries", []):
-        title = getattr(e, "title", "") or ""
-        link = getattr(e, "link", "") or url
-        if title:
-            out.append(Row(name=normalize_title(title), link=link, source=f"RSS: {source_name}"))
-    logger.info("RSS %s -> %d items", source_name, len(out))
-    return out
+            rows.append(Row(name=name, link=href, source=source))
+            if len(rows) >= max_items:
+                return rows
+    return rows
 
-def fetch_genre_events(url: str = "https://genreevents.com/downstate-new-york/") -> List[Row]:
-    out = []
-    html = polite_get_text(url)
-    if not html:
-        return out
-    soup = BeautifulSoup(html, "html.parser")
-    table = soup.find("table")
-    if not table:
-        logger.debug("GenreEvents: no table found at %s", url)
-        return out
-    rows = table.find_all("tr")
-    if not rows:
-        return out
-    for tr in rows[1:]:
-        tds = tr.find_all("td")
-        if not tds:
+def dedupe(rows: List[Row]) -> List[Row]:
+    """Deduplicate primarily by link, secondarily by fuzzy title."""
+    out: List[Row] = []
+    seen_links = set()
+
+    for r in rows:
+        if r.link in seen_links:
             continue
-        cell = tds[0]
+
+        dup = False
+        for u in out:
+            if r.link == u.link:
+                dup = True
+                break
+            score = fuzz.token_sort_ratio(r.name.lower(), u.name.lower())
+            if score >= 95:
+                dup = True
+                break
+
+        if not dup:
+            out.append(r)
+            seen_links.add(r.link)
+
+    logger.info("Deduped %d -> %d", len(rows), len(out))
+    return out
+
+# ------------------ RSS sources ------------------
+
+def fetch_rss(url: str, source_name: str, max_items: int = 40) -> List[Row]:
+    resp = fetch_url(url, headers={"Accept": "application/rss+xml,application/xml;q=0.9,*/*;q=0.8"})
+    if not resp or resp.status_code >= 400:
+        return []
+    parsed = feedparser.parse(resp.content)
+    rows: List[Row] = []
+    for entry in getattr(parsed, "entries", []):
+        title = normalize_text(getattr(entry, "title", ""))
+        link = getattr(entry, "link", None)
+        if title and link:
+            rows.append(Row(name=title, link=link, source=source_name))
+        if len(rows) >= max_items:
+            break
+    logger.info("RSS %s -> %d items", source_name, len(rows))
+    return rows
+
+def google_news_rss(query: str, source_name: str, max_items: int = 25) -> List[Row]:
+    """
+    Google News RSS search endpoint.
+    Example format widely documented by the community:
+      https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en
+    """
+    q = quote_plus(query)
+    url = f"https://news.google.com/rss/search?q={q}&hl=en-US&gl=US&ceid=US:en"
+    return fetch_rss(url, source_name=source_name, max_items=max_items)
+
+# ------------------ HTML sources ------------------
+
+def fetch_genre_events() -> List[Row]:
+    url = "https://genreevents.com/downstate-new-york/"
+    soup = soup_from(url)
+    if not soup:
+        return []
+    rows: List[Row] = []
+    for tr in soup.select("table tr")[1:]:
+        cols = tr.find_all("td")
+        if not cols:
+            continue
+        cell = cols[0]
         a = cell.find("a", href=True)
-        name = a.get_text(" ", strip=True) if a else cell.get_text(" ", strip=True)
-        href = urljoin(url, a["href"]) if a and a.has_attr("href") else url
-        name = normalize_title(name)
+        name = normalize_text(a.get_text(" ", strip=True) if a else cell.get_text(" ", strip=True))
+        link = urljoin(url, a["href"]) if a else url
         if name:
-            out.append(Row(name=name, link=href, source="GenreEvents"))
-    logger.info("GenreEvents -> %d items", len(out))
-    return out
+            rows.append(Row(name=name, link=link, source="GenreEvents"))
+    logger.info("GenreEvents -> %d items", len(rows))
+    return rows
 
-# ----------------- New site: donyc.com -----------------
-def fetch_donyc(url: str = "https://donyc.com/") -> List[Row]:
+def fetch_timeout_current_month(max_items: int = 60) -> List[Row]:
     """
-    donyc.com is a blog-like site with event posts — attempt JSON-LD, RSS, and heuristics.
+    Pull current-month link from the Time Out NYC events calendar hub,
+    then scrape the month page.
     """
-    out = []
-    html = polite_get_text(url)
-    if not html:
-        return out
-    soup = BeautifulSoup(html, "html.parser")
+    hub = "https://www.timeout.com/newyork/events-calendar"
+    hub_soup = soup_from(hub)
+    if not hub_soup:
+        return []
 
-    # JSON-LD
-    for j in extract_jsonld(soup):
-        typ = j.get("@type") or j.get("type") or ""
-        if isinstance(typ, list):
-            typ = typ[0] if typ else ""
-        if "Event" in str(typ) or "event" in str(typ).lower() or "Article" in str(typ):
-            name = j.get("name") or j.get("headline") or ""
-            link = j.get("url") or url
-            if name:
-                out.append(Row(name=normalize_title(name), link=link, source="DoNYC (jsonld)"))
-
-    # RSS
-    # try common feed locations
-    for feed_url in ("/feed/", "/rss/", "/?feed=rss2"):
-        candidate = urljoin(url, feed_url)
-        items = fetch_rss_feed(candidate, "DoNYC")
-        if items:
-            for r in items:
-                r.source = "DoNYC (rss)"
-            out.extend(items)
+    month_name = datetime.utcnow().strftime("%B").lower()  # e.g., "march"
+    # find the link whose text contains "March events" etc.
+    month_link = None
+    for a in hub_soup.select("a[href]"):
+        txt = normalize_text(a.get_text(" ", strip=True)).lower()
+        if txt == f"{month_name} events":
+            month_link = urljoin(hub, a["href"])
             break
 
-    # Heuristic anchors if no JSON-LD / RSS
-    if not out:
-        selectors = ["h1 a", "h2 a", "h3 a", ".entry-title a", ".post-title a", "article a"]
-        anchors = collect_anchors_by_selectors(soup, url, selectors)
-        for a in anchors:
-            a.source = "DoNYC (heuristic)"
-        out.extend(anchors)
+    if not month_link:
+        # If no match, fallback to the old pattern.
+        month_link = f"https://www.timeout.com/newyork/events-calendar/{month_name}-events-calendar"
 
-    logger.info("DoNYC -> %d items", len(out))
-    return out
+    month_soup = soup_from(month_link)
+    if not month_soup:
+        return []
 
-# ----------------- New site: Timeout events calendar -----------------
-def build_timeout_url_for_current_month() -> str:
-    """Return a Timeout events calendar URL for the current month (format used by Timeout site)."""
-    if TIMEOUT_URL_OVERRIDE:
-        return TIMEOUT_URL_OVERRIDE
-    now = datetime.utcnow()
-    # Example pattern: https://www.timeout.com/newyork/events-calendar/march-events-calendar
-    month_name = now.strftime("%B").lower()
-    return f"https://www.timeout.com/newyork/events-calendar/{month_name}-events-calendar"
+    deny_text = {
+        "read more", "facebook", "twitter", "pinterest",
+        "terms of use", "privacy policy", "copy link", "subscribe",
+    }
+    deny_href = ("/privacy", "/terms", "facebook.com", "twitter.com", "pinterest.", "whatsapp")
 
-def fetch_timeout_calendar(url: Optional[str] = None) -> List[Row]:
-    out = []
-    if not url:
-        url = build_timeout_url_for_current_month()
-    html = polite_get_text(url)
-    if not html:
-        return out
-    soup = BeautifulSoup(html, "html.parser")
+    # Prefer links inside <article> if present.
+    article = month_soup.find("article") or month_soup
+    rows = extract_links(
+        article, month_link,
+        selectors=["h2 a[href]", "h3 a[href]", "a[href]"],
+        source="Time Out (NYC events calendar)",
+        max_items=max_items,
+        deny_text=deny_text,
+        deny_href_substrings=deny_href,
+    )
 
-    # Try JSON-LD
-    for j in extract_jsonld(soup):
-        typ = j.get("@type") or j.get("type") or ""
-        if isinstance(typ, list):
-            typ = typ[0] if typ else ""
-        if "Event" in str(typ) or "Article" in str(typ):
-            name = j.get("name") or j.get("headline") or ""
-            link = j.get("url") or url
-            if name:
-                out.append(Row(name=normalize_title(name), link=link, source="TimeOut (jsonld)"))
+    # Filter out obvious navigational junk by requiring “non-trivial” titles
+    rows = [r for r in rows if len(r.name) >= 10]
 
-    # Try RSS via link rel alternate
-    for link_tag in soup.select("link[rel='alternate']"):
-        t = link_tag.get("type", "")
-        if "rss" in t or "atom" in t:
-            rss = urljoin(url, link_tag.get("href"))
-            items = fetch_rss_feed(rss, "TimeOut")
-            for r in items:
-                r.source = "TimeOut (rss)"
-            out.extend(items)
-            break
+    logger.info("Time Out -> %d items (from %s)", len(rows), month_link)
+    return rows
 
-    # Heuristic anchors
-    selectors = [
-        ".card__content a", ".card a", ".listing a",
-        ".event-card a", ".component-article a",
-        "h2 a", "h3 a", ".kicker a", ".teaser a"
-    ]
-    anchors = collect_anchors_by_selectors(soup, url, selectors)
-    for a in anchors:
-        a.source = "TimeOut (heuristic)"
-    out.extend(anchors)
+def fetch_secretnyc(pages: int = SECRETNYC_PAGES, max_items_per_page: int = 40) -> List[Row]:
+    base = "https://secretnyc.co/things-to-do/"
+    out: List[Row] = []
 
-    logger.info("TimeOut -> %d items from %s", len(out), url)
-    return out
+    for p in range(1, max(1, pages) + 1):
+        url = base if p == 1 else f"{base}page/{p}/"
+        soup = soup_from(url)
+        if not soup:
+            continue
 
-# ----------------- New site: SecretNYC -----------------
-def fetch_secretnyc(url: str = "https://secretnyc.co/") -> List[Row]:
-    out = []
-    html = polite_get_text(url)
-    if not html:
-        return out
-    soup = BeautifulSoup(html, "html.parser")
-
-    # JSON-LD
-    for j in extract_jsonld(soup):
-        typ = j.get("@type") or j.get("type") or ""
-        if isinstance(typ, list):
-            typ = typ[0] if typ else ""
-        if "Event" in str(typ) or "Article" in str(typ):
-            name = j.get("name") or j.get("headline") or ""
-            link = j.get("url") or url
-            if name:
-                out.append(Row(name=normalize_title(name), link=link, source="SecretNYC (jsonld)"))
-
-    # RSS
-    for feed_url in ("/feed/", "/rss/"):
-        items = fetch_rss_feed(urljoin(url, feed_url), "SecretNYC")
-        if items:
-            for r in items:
-                r.source = "SecretNYC (rss)"
-            out.extend(items)
-            break
-
-    # Heuristic anchors
-    selectors = ["h2.entry-title a", ".post-title a", ".featured a", "article a", "a[href]"]
-    anchors = collect_anchors_by_selectors(soup, url, selectors)
-    for a in anchors:
-        a.source = "SecretNYC (heuristic)"
-    out.extend(anchors)
+        deny_href = ("facebook.com", "twitter.com", "tiktok.com", "youtube.com", "instagram.com")
+        rows = extract_links(
+            soup, url,
+            selectors=["h2 a[href]", "h3 a[href]"],
+            source="SecretNYC (Things To Do)",
+            max_items=max_items_per_page,
+            deny_text=set(),
+            deny_href_substrings=deny_href
+        )
+        out.extend(rows)
 
     logger.info("SecretNYC -> %d items", len(out))
     return out
 
-# ----------------- New site: NYC Bucket List -----------------
-def fetch_nyc_bucket_list(url: str = "https://www.nycbucketlist.com/") -> List[Row]:
-    out = []
-    html = polite_get_text(url)
-    if not html:
-        return out
-    soup = BeautifulSoup(html, "html.parser")
+def fetch_bucketlisters_nyc(max_items: int = 80) -> List[Row]:
+    """
+    Scrape Bucket Listers’ NYC city discovery page (server-rendered list of experiences).
+    """
+    url = "https://bucketlisters.com/explore/city/NYC"
+    soup = soup_from(url)
+    if not soup:
+        return []
 
-    # JSON-LD check
-    for j in extract_jsonld(soup):
-        typ = j.get("@type") or j.get("type") or ""
-        if isinstance(typ, list):
-            typ = typ[0] if typ else ""
-        if "Event" in str(typ) or "Article" in str(typ):
-            name = j.get("name") or j.get("headline") or ""
-            link = j.get("url") or url
-            if name:
-                out.append(Row(name=normalize_title(name), link=link, source="NYC Bucket List (jsonld)"))
+    deny_href = ("apps.apple.com", "instagram.com", "tiktok.com", "youtube.com", "facebook.com")
+    deny_text = {"sign in", "find your city", "show more", "add to your bucket list"}
 
-    # RSS
-    for feed_url in ("/feed/", "/?format=rss"):
-        items = fetch_rss_feed(urljoin(url, feed_url), "NYC Bucket List")
-        if items:
-            for r in items:
-                r.source = "NYC Bucket List (rss)"
-            out.extend(items)
-            break
+    rows = extract_links(
+        soup, url,
+        selectors=["a[href]"],
+        source="Bucket Listers (NYC)",
+        max_items=max_items,
+        deny_text=deny_text,
+        deny_href_substrings=deny_href
+    )
 
-    # Heuristic anchors
-    selectors = ["h2.entry-title a", ".post a", ".article a", "article a", "a[href]"]
-    anchors = collect_anchors_by_selectors(soup, url, selectors)
-    for a in anchors:
-        a.source = "NYC Bucket List (heuristic)"
-    out.extend(anchors)
+    # Heuristic: keep only items that look like experiences (remove very short/empty labels)
+    rows = [r for r in rows if len(r.name) >= 10]
 
-    logger.info("NYC Bucket List -> %d items", len(out))
+    logger.info("Bucket Listers NYC -> %d items", len(rows))
+    return rows
+
+def fetch_nypl_calendar(pages: int = NYPL_PAGES, max_items_per_page: int = 60) -> List[Row]:
+    """
+    NYPL events calendar listing pages are paginated by ?page=2 etc.
+    We only fetch the first N pages to stay lightweight.
+    """
+    base = "https://www.nypl.org/events/calendar"
+    out: List[Row] = []
+
+    for p in range(1, max(1, pages) + 1):
+        url = base if p == 1 else f"{base}?page={p}"
+        soup = soup_from(url)
+        if not soup:
+            continue
+
+        # NYPL event detail links commonly include /events/programs/
+        rows = []
+        for a in soup.select("a[href]"):
+            href = a.get("href", "")
+            if "/events/programs/" not in href:
+                continue
+            name = normalize_text(a.get_text(" ", strip=True))
+            if not name or len(name) < 7:
+                continue
+            rows.append(Row(name=name, link=urljoin(url, href), source="NYPL Events Calendar"))
+
+            if len(rows) >= max_items_per_page:
+                break
+
+        out.extend(rows)
+
+    logger.info("NYPL -> %d items (pages=%d)", len(out), max(1, pages))
     return out
 
-# ----------------- NY Event Radar (improved fallback kept) -----------------
-def fetch_ny_event_radar(base_url: str = "https://ny-event-radar.com/") -> List[Row]:
-    out = []
-    tried_urls = [base_url, urljoin(base_url, "page/1/")]
-    for u in tried_urls:
-        logger.debug("Trying NY Event Radar URL: %s", u)
-        html = polite_get_text(u)
-        if not html:
-            continue
-        soup = BeautifulSoup(html, "html.parser")
+def fetch_ny_event_radar() -> List[Row]:
+    """
+    NY Event Radar currently does not expose usable links in the server response.
+    Keep this as a placeholder so we can log it clearly rather than silently failing.
+    """
+    url = "https://www.ny-event-radar.com/"
+    resp = fetch_url(url)
+    if not resp or resp.status_code >= 400:
+        return []
 
-        # JSON-LD
-        for j in extract_jsonld(soup):
-            typ = j.get("@type") or j.get("type") or ""
-            if isinstance(typ, list):
-                typ = typ[0] if typ else ""
-            if "Event" in str(typ) or "Article" in str(typ):
-                name = j.get("name") or j.get("headline") or ""
-                link = j.get("url") or u
-                if name:
-                    out.append(Row(name=normalize_title(name), link=link, source="NY Event Radar (jsonld)"))
+    soup = BeautifulSoup(resp.text, "html.parser")
+    candidates = extract_links(soup, url, selectors=["a[href]"], source="NY Event Radar", max_items=25)
 
-        # attempt RSS link
-        rss_link = None
-        for link_tag in soup.select("link[rel='alternate']"):
-            t = link_tag.get("type", "")
-            if "rss" in t or "atom" in t:
-                rss_link = urljoin(u, link_tag.get("href"))
-                break
-        if rss_link:
-            logger.info("NY Event Radar RSS found: %s", rss_link)
-            items = fetch_rss_feed(rss_link, "NY Event Radar")
-            for r in items:
-                r.source = "NY Event Radar (rss)"
-            out.extend(items)
-            continue
+    # If there are no anchors, or only trivial anchors, skip.
+    candidates = [c for c in candidates if len(c.name) >= 10]
+    if not candidates:
+        logger.warning("NY Event Radar -> 0 usable links (likely JS-only or placeholder HTML).")
+    return candidates
 
-        # heading/article anchors heuristics
-        selectors = ("h1 a", "h2 a", "h3 a", ".entry-title a", ".post-title a", "article a", "a[href]")
-        anchors = collect_anchors_by_selectors(soup, u, list(selectors))
-        for a in anchors:
-            a.source = "NY Event Radar (heuristic)"
-        out.extend(anchors)
+def fetch_donyc_with_fallback() -> List[Row]:
+    """
+    Try DoNYC directly; if blocked (403), optionally use Google News RSS fallback.
+    """
+    url = "https://donyc.com/"
+    resp = fetch_url(url)
+    if resp and resp.status_code == 200:
+        soup = BeautifulSoup(resp.text, "html.parser")
+        rows = extract_links(
+            soup, url,
+            selectors=["h2 a[href]", "h3 a[href]", ".entry-title a[href]", "article a[href]"],
+            source="DoNYC",
+            max_items=40
+        )
+        logger.info("DoNYC direct -> %d items", len(rows))
+        return rows
 
-        if out:
-            break
+    if resp and resp.status_code == 403:
+        logger.warning("DoNYC direct blocked by 403.")
+        if ENABLE_GOOGLE_NEWS_FALLBACKS:
+            return google_news_rss("site:donyc.com when:30d", "DoNYC (Google News fallback)", max_items=20)
+    return []
 
-    logger.info("NY Event Radar -> %d items", len(out))
-    if not out:
-        logger.warning("NY Event Radar: no items found — possibly JS-rendered or using API endpoints.")
-    return out
+# ------------------ README update ------------------
 
-# ---------- Dedupe ----------
-def dedupe_rows(rows: List[Row]) -> List[Row]:
-    uniques: List[Row] = []
-    seen_links = set()
-    for r in rows:
-        if r.link and r.link in seen_links:
-            continue
-        is_dup = False
-        for u in uniques:
-            if r.link and u.link and r.link == u.link:
-                is_dup = True
-                break
-            score = fuzz.token_sort_ratio(r.name.lower(), u.name.lower())
-            if score >= 95:
-                is_dup = True
-                break
-        if not is_dup:
-            uniques.append(r)
-            if r.link:
-                seen_links.add(r.link)
-    logger.info("Deduped %d -> %d", len(rows), len(uniques))
-    return uniques
-
-# ---------- README update ----------
-def update_readme(rows: List[Row]):
+def update_readme(rows: List[Row]) -> None:
     now = datetime.utcnow().strftime("%Y-%m-%d")
-    lines = []
-    lines.append(f"### NYC Event Digest (Updated: {now})")
-    lines.append(f"*Found {len(rows)} unique events.*")
-    lines.append("")
-    lines.append("| Event | Link | Source |")
-    lines.append("| :--- | :--- | :--- |")
+    table = []
+    table.append(f"### NYC Event Digest (Updated: {now})")
+    table.append(f"*Found {len(rows)} items after dedupe.*")
+    table.append("")
+    table.append("| Event | Link | Source |")
+    table.append("| :--- | :--- | :--- |")
+
     for r in rows:
-        name = r.name.replace("|", "\\|")
-        link = r.link
-        src = r.source.replace("|", "\\|")
-        lines.append(f"| {name} | [Link]({link}) | {src} |")
-    block = "\n".join(lines) + "\n"
+        safe_name = r.name.replace("|", "\\|")
+        safe_source = r.source.replace("|", "\\|")
+        table.append(f"| {safe_name} | [Link]({r.link}) | {safe_source} |")
+
+    block = "\n".join(table) + "\n"
 
     if not os.path.exists(README_PATH):
         with open(README_PATH, "w", encoding="utf-8") as f:
@@ -453,37 +450,51 @@ def update_readme(rows: List[Row]):
     with open(README_PATH, "w", encoding="utf-8") as f:
         f.write(updated)
 
-    logger.info("%s updated with %d events", README_PATH, len(rows))
+    logger.info("%s updated with %d rows", README_PATH, len(rows))
 
-# ---------- Orchestrator ----------
+# ------------------ Main ------------------
+
 def main():
-    logger.info("Starting aggregator (extended sources).")
+    logger.info("Starting aggregator (robust sources + NYPL).")
+
     rows: List[Row] = []
 
-    # RSS
-    rows.extend(fetch_rss_feed("https://www.theskint.com/feed/", "The Skint"))
-    rows.extend(fetch_rss_feed("https://www.thrillist.com/rss/locations/new-york", "Thrillist"))
+    # Known-good RSS
+    rows.extend(fetch_rss("https://www.theskint.com/feed/", "The Skint", max_items=40))
 
-    # HTML tables
+    # Thrillist: old RSS is broken in your logs; use Google News fallback if enabled
+    if ENABLE_GOOGLE_NEWS_FALLBACKS:
+        rows.extend(google_news_rss("site:thrillist.com (\"New York\" OR NYC) when:30d", "Thrillist (Google News fallback)", max_items=15))
+
+    # Works well as-is
     rows.extend(fetch_genre_events())
 
-    # Additional sites requested
-    rows.extend(fetch_donyc("https://donyc.com/"))
-    rows.extend(fetch_timeout_calendar())  # uses current month or TIMEOUT_URL override
-    rows.extend(fetch_secretnyc("https://secretnyc.co/"))
-    rows.extend(fetch_nyc_bucket_list("https://www.nycbucketlist.com/"))
+    # Improve Time Out extraction significantly
+    rows.extend(fetch_timeout_current_month(max_items=60))
 
-    # NY Event Radar (keep the improved heuristics)
+    # SecretNYC listing pages (better than RSS in practice)
+    rows.extend(fetch_secretnyc(pages=SECRETNYC_PAGES, max_items_per_page=40))
+
+    # Bucket Listers NYC (the “NYC Bucket List” ecosystem)
+    rows.extend(fetch_bucketlisters_nyc(max_items=80))
+
+    # NYPL calendar (first N pages only)
+    rows.extend(fetch_nypl_calendar(pages=NYPL_PAGES, max_items_per_page=60))
+
+    # DoNYC direct (likely blocked) + fallback
+    rows.extend(fetch_donyc_with_fallback())
+
+    # NY Event Radar (currently not usable; logs but does not crash)
     rows.extend(fetch_ny_event_radar())
 
     logger.info("Collected rows before dedupe: %d", len(rows))
-    rows = dedupe_rows(rows)
-    rows.sort(key=lambda r: (r.source, r.name.lower()))
+    rows = dedupe(rows)
+    rows.sort(key=lambda r: (r.source.lower(), r.name.lower()))
 
     if rows:
         update_readme(rows)
     else:
-        logger.info("No events to write.")
+        logger.warning("No rows to write.")
 
 if __name__ == "__main__":
     main()
