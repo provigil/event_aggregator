@@ -3,8 +3,8 @@
 
 <!-- NYC_EVENTS_START -->
 
-### NYC Event Digest (Updated: 2026-03-16)
-*Found 70 items after dedupe.*
+### NYC Event Digest (Updated: 2026-04-01)
+*Found 93 items after dedupe.*
 
 | Event | Link | Source |
 | :--- | :--- | :--- |
@@ -28,55 +28,78 @@
 | The Great Jack O'Lantern Blaze (Long Island) | [Link](https://pumpkinblaze.org/blaze-long-island.html) | GenreEvents |
 | Urban Action Showcase and Expo | [Link](https://www.urbanactionshowcase.com) | GenreEvents |
 | YoFiFest (Yonkers Film Festival) | [Link](http://www.yofifest.com) | GenreEvents |
-| *In-Person: Microsoft Word for Beginners | [Link](https://www.nypl.org/events/programs/2026/03/16/person-microsoft-word-beginners) | NYPL Events Calendar |
-| *In-Person: Python Open Lab | [Link](https://www.nypl.org/events/programs/2026/03/16/person-python-open-lab) | NYPL Events Calendar |
-| *Online: Fundamentals of Programming with Python Part 1 | [Link](https://www.nypl.org/events/programs/2026/03/16/online-fundamentals-programming-python-part-1) | NYPL Events Calendar |
-| *Online: YouTube for Beginners (Mandarin) \|\| YouTube 使用基礎 | [Link](https://www.nypl.org/events/programs/2026/03/16/online-youtube-beginners-mandarin-youtube-shi-yong-ji-chu) | NYPL Events Calendar |
-| Adult Coloring & Conversation Program | [Link](https://www.nypl.org/events/programs/2026/03/02/adult-coloring-conversation-program) | NYPL Events Calendar |
-| Animonday! | [Link](https://www.nypl.org/events/programs/2026/03/02/animonday) | NYPL Events Calendar |
-| ARTistic Teens | [Link](https://www.nypl.org/events/programs/2026/03/02/artistic-teens) | NYPL Events Calendar |
-| Brain Boost Club 4 Teens @ Jerome Park | [Link](https://www.nypl.org/events/programs/2026/03/02/brain-boost-club-4-teens-jerome-park) | NYPL Events Calendar |
-| Builder's Club | [Link](https://www.nypl.org/events/programs/2026/03/16/builders-club) | NYPL Events Calendar |
+| **In-Person** Financial Coaching with NYLAG at the Business Center | [Link](https://www.nypl.org/events/programs/2026/04/01/clone-person-financial-coaching-nylag-business-center) | NYPL Events Calendar |
+| *In-Person: Computer Basics for Older Adults (55+) | [Link](https://www.nypl.org/events/programs/2026/04/01/person-computer-basics-older-adults-55) | NYPL Events Calendar |
+| *In-Person: Windows Basics | [Link](https://www.nypl.org/events/programs/2026/04/01/person-windows-basics) | NYPL Events Calendar |
+| *Online: Fundamentals of Programming with Python Part 1 | [Link](https://www.nypl.org/events/programs/2026/04/01/online-fundamentals-programming-python-part-1) | NYPL Events Calendar |
+| Baby and Toddler Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/baby-and-toddler-storytime) | NYPL Events Calendar |
+| Baby Art! | [Link](https://www.nypl.org/events/programs/2026/04/01/baby-art) | NYPL Events Calendar |
+| Baby Bookworms -- Infant Lapsit Storytime | [Link](https://www.nypl.org/events/programs/2026/03/04/baby-bookworms-infant-lapsit-storytime-0) | NYPL Events Calendar |
+| Baby Lapsit Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/baby-lapsit-storytime) | NYPL Events Calendar |
+| Book Talk: What's Up with Women and Money? | [Link](https://www.nypl.org/events/programs/2026/04/01/book-talk-whats-women-and-money) | NYPL Events Calendar |
 | Business Center at SNFL | [Link](https://www.nypl.org/events/programs/snfl/business) | NYPL Events Calendar |
-| Checkmate!!! Open Chess Session | [Link](https://www.nypl.org/events/programs/2026/03/16/checkmate-open-chess-session) | NYPL Events Calendar |
-| College & Career Pathways: 1-on-1 College/Career Counseling Sessions @ Mosholu Library | [Link](https://www.nypl.org/events/programs/2026/03/02/college-career-pathways-1-1-collegecareer-counseling-sessions-mosholu) | NYPL Events Calendar |
-| College and Career Pathways: In Person One-on-One Counseling Sessions | [Link](https://www.nypl.org/events/programs/2026/03/16/college-and-career-pathways-person-one-one-counseling-sessions) | NYPL Events Calendar |
-| Coloring Corner | [Link](https://www.nypl.org/events/programs/2026/03/02/coloring-corner) | NYPL Events Calendar |
-| Coloring Time | [Link](https://www.nypl.org/events/programs/2026/03/02/coloring-time) | NYPL Events Calendar |
-| Family Storytime | [Link](https://www.nypl.org/events/programs/2026/03/02/family-storytime-0) | NYPL Events Calendar |
-| Game Development | [Link](https://www.nypl.org/events/programs/2026/03/16/game-development) | NYPL Events Calendar |
-| HIGH BEGINNER Level English Conversation Classes: We Speak NYC | [Link](https://www.nypl.org/events/programs/2026/03/02/clone-high-beginner-level-english-conversation-classes-we-speak-nyc) | NYPL Events Calendar |
-| Hooked on Crochet: Family Fun & Conversation | [Link](https://www.nypl.org/events/programs/2026/03/02/hooked-crochet-family-fun-conversation) | NYPL Events Calendar |
-| Kid Flicks: How to Train Your Dragon | [Link](https://www.nypl.org/events/programs/2026/03/16/kid-flicks-how-train-your-dragon) | NYPL Events Calendar |
-| Kids STEAM: Storytime STEAM | [Link](https://www.nypl.org/events/programs/2026/03/02/kids-steam-storytime-steam) | NYPL Events Calendar |
-| Lego Club | [Link](https://www.nypl.org/events/programs/2026/03/02/lego-club-0) | NYPL Events Calendar |
+| Caregiver Conversations: Community Baby Shower | [Link](https://www.nypl.org/events/programs/2026/04/01/caregiver-conversations-community-baby-shower) | NYPL Events Calendar |
+| Caregiver Social Hour & Open Play | [Link](https://www.nypl.org/events/programs/2026/04/01/caregiver-social-hour-open-play) | NYPL Events Calendar |
+| Chinese Traditional Painting 國畫 | [Link](https://www.nypl.org/events/programs/2026/04/01/chinese-traditional-painting-guo-hua) | NYPL Events Calendar |
+| Clase de Tecnología | [Link](https://www.nypl.org/events/programs/2026/04/01/clase-de-tecnologia) | NYPL Events Calendar |
+| Coloring Corner | [Link](https://www.nypl.org/events/programs/2026/04/01/coloring-corner) | NYPL Events Calendar |
+| Coloring for Babies and Toddlers | [Link](https://www.nypl.org/events/programs/2026/04/01/coloring-babies-and-toddlers) | NYPL Events Calendar |
+| Computer Basics for Absolute Beginners (Apr. 2026) | [Link](https://www.nypl.org/events/programs/2026/04/01/computer-basics-absolute-beginners-apr-2026) | NYPL Events Calendar |
+| Computer Class Level II | [Link](https://www.nypl.org/events/programs/2026/04/01/computer-class-level-ii) | NYPL Events Calendar |
+| Crossword Club (Virtual!) | [Link](https://www.nypl.org/events/programs/2026/04/01/crossword-club-virtual) | NYPL Events Calendar |
+| Cuentos y Canciones | [Link](https://www.nypl.org/events/programs/2026/04/01/cuentos-y-canciones) | NYPL Events Calendar |
+| Early Literacy Open Play | [Link](https://www.nypl.org/events/programs/2026/04/01/early-literacy-open-play) | NYPL Events Calendar |
+| English Conversation Class: We Speak NYC | [Link](https://www.nypl.org/events/programs/2026/04/01/english-conversation-class-we-speak-nyc) | NYPL Events Calendar |
+| English for everyday life | [Link](https://www.nypl.org/events/programs/2026/04/01/english-everyday-life) | NYPL Events Calendar |
+| Family Playdate | [Link](https://www.nypl.org/events/programs/2026/04/01/family-playdate) | NYPL Events Calendar |
+| Family Storytime | [Link](https://www.nypl.org/events/programs/2026/03/03/family-storytime-0) | NYPL Events Calendar |
+| Family Storytime with Chatham Square | [Link](https://www.nypl.org/events/programs/2026/04/01/family-storytime-chatham-square) | NYPL Events Calendar |
+| Family Storytime with Drag Artists for Expression NYC | [Link](https://www.nypl.org/events/programs/2026/04/01/clone-family-storytime-drag-artists-expression-nyc) | NYPL Events Calendar |
+| Financial, Credit, and Medicare Counseling | [Link](https://www.nypl.org/events/programs/2026/04/01/clone-financial-credit-and-medicare-counseling) | NYPL Events Calendar |
+| HIGH BEGINNER Level English Conversation Classes: We Speak NYC | [Link](https://www.nypl.org/events/programs/2026/04/01/high-beginner-level-english-conversation-classes-we-speak-nyc) | NYPL Events Calendar |
+| Hybrid Book Discussion: Open Book Format | [Link](https://www.nypl.org/events/programs/2026/04/01/hybrid-book-discussion-open-book-format) | NYPL Events Calendar |
+| Infant Lapsit Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/infant-lapsit-storytime) | NYPL Events Calendar |
+| Knitting and Crocheting Club | [Link](https://www.nypl.org/events/programs/2026/04/01/knitting-and-crocheting-club) | NYPL Events Calendar |
+| Lapsit Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/lapsit-storytime) | NYPL Events Calendar |
 | Library for the Performing Arts | [Link](https://www.nypl.org/events/programs/lpa) | NYPL Events Calendar |
-| Movie Monday - The Tigger Movie (2000) | [Link](https://www.nypl.org/events/programs/2026/03/16/movie-monday-tigger-movie-2000) | NYPL Events Calendar |
-| Musical Mondays | [Link](https://www.nypl.org/events/programs/2026/03/02/musical-mondays) | NYPL Events Calendar |
-| NYPL After School | [Link](https://www.nypl.org/events/programs/2026/03/02/nypl-after-school) | NYPL Events Calendar |
-| R.E.A.D to Tyler | [Link](https://www.nypl.org/events/programs/2026/03/16/read-tyler) | NYPL Events Calendar |
+| Little Movers | [Link](https://www.nypl.org/events/programs/2026/04/01/little-movers) | NYPL Events Calendar |
+| Little Movers Board Book Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/little-movers-board-book-storytime) | NYPL Events Calendar |
+| Little Movers Open Play | [Link](https://www.nypl.org/events/programs/2026/04/01/little-movers-open-play-0) | NYPL Events Calendar |
+| Little Movers Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/little-movers-storytime-6) | NYPL Events Calendar |
+| Little Movers Storytime- Bilingual- Spanish | [Link](https://www.nypl.org/events/programs/2026/03/03/clone-little-movers-storytime-bilingual-spanish) | NYPL Events Calendar |
+| Little Movers Storytime: April Showers | [Link](https://www.nypl.org/events/programs/2026/04/01/little-movers-storytime-april-showers) | NYPL Events Calendar |
+| Meet with our Social Work Student Intern | [Link](https://www.nypl.org/events/programs/2026/04/01/clone-meet-our-social-work-student-intern) | NYPL Events Calendar |
+| Microsoft Word for Beginners | [Link](https://www.nypl.org/events/programs/2026/04/01/microsoft-word-beginners) | NYPL Events Calendar |
+| Music & Movement: Family JAMboree (Online Registration Required) | [Link](https://www.nypl.org/events/programs/2026/04/01/music-movement-family-jamboree-online-registration-required) | NYPL Events Calendar |
+| Online Little Movers Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/online-little-movers-storytime) | NYPL Events Calendar |
+| Open Lab | [Link](https://www.nypl.org/events/programs/2026/04/01/open-lab) | NYPL Events Calendar |
+| Open Play | [Link](https://www.nypl.org/events/programs/2026/04/01/open-play-1) | NYPL Events Calendar |
+| Open Play Date | [Link](https://www.nypl.org/events/programs/2026/04/01/open-play-date) | NYPL Events Calendar |
+| Open Play for Babies and Toddlers | [Link](https://www.nypl.org/events/programs/2026/04/01/open-play-babies-and-toddlers) | NYPL Events Calendar |
+| Open Play: Stay & Play | [Link](https://www.nypl.org/events/programs/2026/04/01/open-play-stay-play) | NYPL Events Calendar |
+| Read the Room: Audiobook | [Link](https://www.nypl.org/events/programs/2026/04/01/read-room-audiobook) | NYPL Events Calendar |
 | Schomburg Center | [Link](https://www.nypl.org/events/programs/schomburg) | NYPL Events Calendar |
-| St. Patrick's Day Button Making | [Link](https://www.nypl.org/events/programs/2026/03/16/st-patricks-day-button-making) | NYPL Events Calendar |
-| St. Patrick's Day Leprechaun Spotters & Scavenger Hunt | [Link](https://www.nypl.org/events/programs/2026/03/16/st-patricks-day-leprechaun-spotters-scavenger-hunt) | NYPL Events Calendar |
-| STEAM TIME: Kandi Bracelet Making Workshop | [Link](https://www.nypl.org/events/programs/2026/03/16/steam-time-kandi-bracelet-making-workshop) | NYPL Events Calendar |
-| STEM:LEGO Creations | [Link](https://www.nypl.org/events/programs/2026/03/02/stemlego-creations) | NYPL Events Calendar |
-| Teen Manga Book Club | [Link](https://www.nypl.org/events/programs/2026/03/16/clone-teen-manga-book-club) | NYPL Events Calendar |
-| Teen Open Hours | [Link](https://www.nypl.org/events/programs/2026/03/16/teen-open-hours) | NYPL Events Calendar |
-| Teen Trivia | [Link](https://www.nypl.org/events/programs/2026/03/16/teen-trivia) | NYPL Events Calendar |
-| Teens! Come Make Scrapbook Pages | [Link](https://www.nypl.org/events/programs/2026/03/16/teens-come-make-scrapbook-pages) | NYPL Events Calendar |
-| Video Games for Teens | [Link](https://www.nypl.org/events/programs/2026/03/02/video-games-teens) | NYPL Events Calendar |
-| CRAICFEST 2026 OPENS TOMORROW AT VILLAGE EAST BY ANGELIKA (SPONSORED) | [Link](https://www.theskint.com/craicfest-2026-opens-tomorrow-at-village-east-by-angelika-sponsored/) | The Skint |
-| FRI-MON, 3/6-3/9: SKINT WEEKEND | [Link](https://www.theskint.com/fri-mon-3-6-3-9-skint-weekend/) | The Skint |
-| JESSICA LANGE, SANTINO FONTANA, AND MORE JOIN COLUM MCCANN FOR A NIGHT OF IRISH READINGS (SPONSORED) | [Link](https://www.theskint.com/jessica-lange-santino-fontana-and-more-join-colum-mccann-for-a-night-of-irish-readings-sponsored/) | The Skint |
-| LINDY WEST AND GUY BRANUM (SPONSORED) | [Link](https://www.theskint.com/lindy-west-and-guy-branum-sponsored/) | The Skint |
-| TARGET MARGIN THEATER PRESENTS THIS IS REAL THROUGH APRIL 4 (SPONSORED) | [Link](https://www.theskint.com/target-margin-theater-presents-this-is-real-starting-march-1-sponsored/) | The Skint |
-| THE RESERVOIR IS “A MUST-SEE PLAY!” TIX FOR $25! (SPONSORED) | [Link](https://www.theskint.com/the-reservoir-is-a-must-see-play-tix-for-25-sponsored/) | The Skint |
-| THREE NIGHTS OF EXTRAORDINARY MUSIC AT CARNEGIE HALL & LINCOLN CENTER — $9 TICKETS (SPONSORED) | [Link](https://www.theskint.com/three-nights-of-extraordinary-music-at-carnegie-hall-lincoln-center-9-tickets-sponsored/) | The Skint |
-| THURS-MON, 3/13-16: SKINT WEEKEND | [Link](https://www.theskint.com/thurs-mon-3-13-16-skint-weekend/) | The Skint |
-| TUES-THURS, 3/10-12: KEITH HARING, FAB 5 FREDDY, PRETZEL STACKERS, AND MORE | [Link](https://www.theskint.com/tues-thurs-3-10-12-keith-haring-fab-5-freddy-pretzel-stackers-and-more/) | The Skint |
-| TUES-THURS, 3/3-5: FREE IHOP, SHOE SALE, NEW COLOSSUS FEST, AND MORE | [Link](https://www.theskint.com/tues-thurs-3-3-5-free-ihop-shoe-sale-new-colossus-fest-and-more/) | The Skint |
-| How to Soak Up Southwest Florida’s Nature and Historic Charm in Two Days - Thrillist | [Link](https://news.google.com/rss/articles/CBMiiwFBVV95cUxNcnFtX05CSzJBYlFCdUViWEJKMGRMZ3ZyNUNLTHE0ci1mcEtzWjJXMlc4WXplS3JRTU4tUFRrOVA2TkdUa3Q3NEI2T2Y4Q0dvTFR4TzZhY1dYRmhPUzlOOXBWeTg1bUc0a3BjWmFLbnhxWmdsd1JuRE5XZDFHb0J1SEpzRGdyaWZsOHln?oc=5) | Thrillist (Google News fallback) |
-| Tennessee Is Serious About Food - Thrillist | [Link](https://news.google.com/rss/articles/CBMickFVX3lxTE1KaHhnNlNsdWdGZ1hHNE1TSkNJSER3WlZpX0JwV1E0clkxWWo4UVAwZjduVldJaVZ3X1ZKejlCcUpPUWlrbnppUkl6ZzlmelFMWG5oTG8yRVl5elVBQ2ZueE5WZWRITXFrbEk5cXpRSjNwQQ?oc=5) | Thrillist (Google News fallback) |
-| 1. St. Patrick’s Day Parade | [Link](https://www.timeout.com/newyork/things-to-do/st-patricks-day-parade-nyc-guide) | Time Out (NYC events calendar) |
+| Self-Assisted Tax Preparation with Campaign for Working Families | [Link](https://www.nypl.org/events/programs/2026/04/01/self-assisted-tax-preparation-campaign-working-families) | NYPL Events Calendar |
+| Sewing Circle | [Link](https://www.nypl.org/events/programs/2026/04/01/sewing-circle) | NYPL Events Calendar |
+| Social Emotional Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/social-emotional-storytime) | NYPL Events Calendar |
+| Spectrum Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/spectrum-storytime) | NYPL Events Calendar |
+| Tax Preparation with Single Stop at Ottendorfer | [Link](https://www.nypl.org/events/programs/2026/04/01/tax-preparation-single-stop-ottendorfer) | NYPL Events Calendar |
+| Toddler & Preschooler Crafts | [Link](https://www.nypl.org/events/programs/2026/04/01/toddler-preschooler-crafts) | NYPL Events Calendar |
+| Toddler Sing-Along | [Link](https://www.nypl.org/events/programs/2026/04/01/toddler-sing-along) | NYPL Events Calendar |
+| Toddler Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/toddler-storytime) | NYPL Events Calendar |
+| Tummy Time! | [Link](https://www.nypl.org/events/programs/2026/04/01/tummy-time) | NYPL Events Calendar |
+| We Speak NYC English Conversation Groups | [Link](https://www.nypl.org/events/programs/2026/04/01/we-speak-nyc-english-conversation-groups) | NYPL Events Calendar |
+| Yarn and Beyond: Community Crochet | [Link](https://www.nypl.org/events/programs/2026/04/01/yarn-and-beyond-community-crochet) | NYPL Events Calendar |
+| $10 TICKETS TO THE “OSCARS FOR BOOKS” (SPONSORED) | [Link](https://www.theskint.com/10-tickets-to-the-oscars-for-books-sponsored/) | The Skint |
+| FREE YOUTH ADMISSION AT THE FRICK COLLECTION! (SPONSORED) | [Link](https://www.theskint.com/free-youth-admission-at-the-frick-collection-sponsored/) | The Skint |
+| FRI-MON, 3/20-23: SKINT WEEKEND | [Link](https://www.theskint.com/fri-mon-3-20-23-skint-weekend/) | The Skint |
+| FRI-MON, 3/27-30: SKINT WEEKEND | [Link](https://www.theskint.com/fri-mon-3-27-30-skint-weekend/) | The Skint |
+| GET $20 NEW DEAL TIX TO TEATRO LA PLAZA’S HAMLET (SPONSORED) | [Link](https://www.theskint.com/get-20-new-deal-tix-to-teatro-la-plazas-hamlet-sponsored/) | The Skint |
+| GET $40 TICKETS TO RHEOLOGY AT PLAYWRIGHTS HORIZONS (SPONSORED) | [Link](https://www.theskint.com/get-40-tickets-to-rheology-at-playwrights-horizons-sponsored/) | The Skint |
+| SQUIRREL NUT ZIPPERS – A NIGHT OF NEW ORLEANS JAZZ (SPONSORED) | [Link](https://www.theskint.com/squirrel-nut-zippers-a-night-of-new-orleans-jazz-sponsored/) | The Skint |
+| TUES-THURS, 3/24-26: $5 WHISKEY TOUR, DATE MY FRIEND, SUBWAY SKETCH + SIP, AND MORE | [Link](https://www.theskint.com/tues-thurs-3-24-26-5-whiskey-tour-date-my-friend-subway-sketch-sip-and-more/) | The Skint |
+| TUES-THURS, 3/31-4/2: GINA GERSHON + GRIFFIN DUNNE, NYC FRINGE, TRANS DAY OF VISIBILITY, AND MORE | [Link](https://www.theskint.com/tues-thurs-3-31-4-2-gina-gershon-griffin-dunne-nyc-fringe-trans-day-of-visibility-and-more/) | The Skint |
+| 🌙 FREE LATE-NIGHT ARTS & CULTURE FESTIVAL (SPONSORED) | [Link](https://www.theskint.com/%f0%9f%8c%99-free-late-night-arts-culture-festival-sponsored/) | The Skint |
+| 1. Snap photos with cherry blossoms | [Link](https://www.timeout.com/newyork/things-to-do/best-places-to-see-cherry-blossoms-in-nyc) | Time Out (NYC events calendar) |
 
 <!-- NYC_EVENTS_END -->
