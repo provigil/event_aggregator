@@ -3,11 +3,25 @@
 
 <!-- NYC_EVENTS_START -->
 
-### NYC Event Digest (Updated: 2026-04-15)
-*Found 108 items after dedupe.*
+### NYC Event Digest (Updated: 2026-05-01)
+*Found 121 items after dedupe.*
 
 | Event | Link | Source |
 | :--- | :--- | :--- |
+| Bucket List | [Link](https://bucketlisters.com/mylist) | Bucket Listers (NYC) |
+| Contact us | [Link](https://bucketlisters.com/contact-us) | Bucket Listers (NYC) |
+| Experiences | [Link](https://bucketlisters.com/explore) | Bucket Listers (NYC) |
+| Inspirations | [Link](https://bucketlisters.com/) | Bucket Listers (NYC) |
+| Los Angeles | [Link](https://bucketlisters.com/explore/city/LA) | Bucket Listers (NYC) |
+| Minneapolis | [Link](https://bucketlisters.com/explore/city/MIN) | Bucket Listers (NYC) |
+| New Orleans | [Link](https://bucketlisters.com/explore/city/NOLA) | Bucket Listers (NYC) |
+| New York City | [Link](https://bucketlisters.com/explore/city/NYC) | Bucket Listers (NYC) |
+| Partner With Us | [Link](https://bucketlisters.com/partnerships) | Bucket Listers (NYC) |
+| Philadelphia | [Link](https://bucketlisters.com/explore/city/PHL) | Bucket Listers (NYC) |
+| Privacy Policy | [Link](https://bucketlisters.com/settings/privacy/policy) | Bucket Listers (NYC) |
+| San Francisco | [Link](https://bucketlisters.com/explore/city/SF) | Bucket Listers (NYC) |
+| Terms of use | [Link](https://bucketlisters.com/settings/privacy/terms) | Bucket Listers (NYC) |
+| Washington DC | [Link](https://bucketlisters.com/explore/city/DC) | Bucket Listers (NYC) |
 | Brookhaven Country Fair | [Link](https://www.brookhavenny.gov/242/Longwood-Fair) | GenreEvents |
 | Brooklyn Horror Film Festival | [Link](http://brooklynhorrorfest.com) | GenreEvents |
 | Brooklyn SciFi Film Festival | [Link](https://brooklynscififilmfest.com) | GenreEvents |
@@ -28,93 +42,92 @@
 | The Great Jack O'Lantern Blaze (Long Island) | [Link](https://pumpkinblaze.org/blaze-long-island.html) | GenreEvents |
 | Urban Action Showcase and Expo | [Link](https://www.urbanactionshowcase.com) | GenreEvents |
 | YoFiFest (Yonkers Film Festival) | [Link](http://www.yofifest.com) | GenreEvents |
-| **In-Person** Financial Coaching with NYLAG at the Business Center | [Link](https://www.nypl.org/events/programs/2026/04/01/clone-person-financial-coaching-nylag-business-center) | NYPL Events Calendar |
-| *In-Person: Learn to Draw with Procreate Part 1 | [Link](https://www.nypl.org/events/programs/2026/04/15/person-learn-draw-procreate-part-1) | NYPL Events Calendar |
-| *In-Person: Prototype It! Part 2 | [Link](https://www.nypl.org/events/programs/2026/04/15/person-prototype-it-part-2) | NYPL Events Calendar |
-| *Online: Working with Files in Python | [Link](https://www.nypl.org/events/programs/2026/04/15/online-working-files-python) | NYPL Events Calendar |
-| Assembly Member Emerita Torres: Mobile Office Hours | [Link](https://www.nypl.org/events/programs/2026/04/15/assembly-member-emerita-torres-mobile-office-hours) | NYPL Events Calendar |
-| Baby and Toddler Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/baby-and-toddler-storytime) | NYPL Events Calendar |
-| Baby and Toddlers Open Play | [Link](https://www.nypl.org/events/programs/2026/04/15/clone-baby-and-toddlers-open-play) | NYPL Events Calendar |
-| Baby Art! | [Link](https://www.nypl.org/events/programs/2026/04/15/baby-art) | NYPL Events Calendar |
-| Baby Bookworms -- Infant Lapsit Storytime | [Link](https://www.nypl.org/events/programs/2026/03/04/baby-bookworms-infant-lapsit-storytime-0) | NYPL Events Calendar |
-| Baby Lapsit Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/baby-lapsit-storytime) | NYPL Events Calendar |
+| *In-Person: Logic Pro 101: Intro to Audio Production | [Link](https://www.nypl.org/events/programs/2026/05/01/person-logic-pro-101-intro-audio-production) | NYPL Events Calendar |
+| *In-Person: Microsoft Excel for Beginners | [Link](https://www.nypl.org/events/programs/2026/05/01/person-microsoft-excel-beginners) | NYPL Events Calendar |
+| AAPI Film: All We Imagine As Light (2024) | [Link](https://www.nypl.org/events/programs/2026/05/01/aapi-film-all-we-imagine-light-2024) | NYPL Events Calendar |
+| Adult Art Club | [Link](https://www.nypl.org/events/programs/2026/05/01/adult-art-club) | NYPL Events Calendar |
+| Adult Board and Card Games | [Link](https://www.nypl.org/events/programs/2026/05/01/adult-board-and-card-games) | NYPL Events Calendar |
+| Adult Crafts - Spring Paintings | [Link](https://www.nypl.org/events/programs/2026/05/01/spring-paintings) | NYPL Events Calendar |
+| Adult Creative Space: Spring Meditative Coloring | [Link](https://www.nypl.org/events/programs/2026/05/01/adult-creative-space-spring-meditative-coloring) | NYPL Events Calendar |
+| Beginners One-on-One Computer Sessions | [Link](https://www.nypl.org/events/programs/2026/05/01/clone-beginners-one-one-computer-sessions) | NYPL Events Calendar |
+| Board Game Bonanza! | [Link](https://www.nypl.org/events/programs/2026/05/01/board-game-bonanza) | NYPL Events Calendar |
+| Bronx Week Films: Lucha: A Wrestling Tale | [Link](https://www.nypl.org/events/programs/2026/05/01/bronx-week-films-lucha-wrestling-tale) | NYPL Events Calendar |
 | Business Center at SNFL | [Link](https://www.nypl.org/events/programs/snfl/business) | NYPL Events Calendar |
-| Business Center Resources for Poets | [Link](https://www.nypl.org/events/programs/2026/04/15/business-center-resources-poets) | NYPL Events Calendar |
-| Caregiver Conversations: Parent Support Circle at Highbridge | [Link](https://www.nypl.org/events/programs/2026/04/15/caregiver-conversations-parent-support-circle-highbridge) | NYPL Events Calendar |
-| Clase de Tecnología | [Link](https://www.nypl.org/events/programs/2026/04/01/clase-de-tecnologia) | NYPL Events Calendar |
-| Coloring Corner | [Link](https://www.nypl.org/events/programs/2026/04/01/coloring-corner) | NYPL Events Calendar |
-| Coloring for Babies and Toddlers | [Link](https://www.nypl.org/events/programs/2026/04/01/coloring-babies-and-toddlers) | NYPL Events Calendar |
-| Computer Basics for Absolute Beginners (Apr. 2026) | [Link](https://www.nypl.org/events/programs/2026/04/01/computer-basics-absolute-beginners-apr-2026) | NYPL Events Calendar |
-| Computer Class Level II | [Link](https://www.nypl.org/events/programs/2026/04/01/computer-class-level-ii) | NYPL Events Calendar |
-| Crossword Club (Virtual!) | [Link](https://www.nypl.org/events/programs/2026/04/01/crossword-club-virtual) | NYPL Events Calendar |
-| Cuentos y Canciones | [Link](https://www.nypl.org/events/programs/2026/04/01/cuentos-y-canciones) | NYPL Events Calendar |
-| Early Literacy Open Play | [Link](https://www.nypl.org/events/programs/2026/04/01/early-literacy-open-play) | NYPL Events Calendar |
-| English for everyday life | [Link](https://www.nypl.org/events/programs/2026/04/01/english-everyday-life) | NYPL Events Calendar |
-| Family Playdate | [Link](https://www.nypl.org/events/programs/2026/04/01/family-playdate) | NYPL Events Calendar |
-| Family Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/family-storytime-0) | NYPL Events Calendar |
-| Family Storytime with Chatham Square | [Link](https://www.nypl.org/events/programs/2026/04/01/family-storytime-chatham-square) | NYPL Events Calendar |
-| Financial, Credit, and Medicare Counseling | [Link](https://www.nypl.org/events/programs/2026/04/01/clone-financial-credit-and-medicare-counseling) | NYPL Events Calendar |
-| Hybrid Book Discussion: Open Book Format | [Link](https://www.nypl.org/events/programs/2026/04/01/hybrid-book-discussion-open-book-format) | NYPL Events Calendar |
-| Infant Lapsit Storytime! | [Link](https://www.nypl.org/events/programs/2026/04/15/infant-lapsit-storytime) | NYPL Events Calendar |
-| Italian Language Club | [Link](https://www.nypl.org/events/programs/2026/04/01/italian-language-club) | NYPL Events Calendar |
-| Kids STEAM: Process Art | [Link](https://www.nypl.org/events/programs/2026/04/15/kids-steam-process-art) | NYPL Events Calendar |
-| Knitting and Crocheting Club | [Link](https://www.nypl.org/events/programs/2026/04/01/knitting-and-crocheting-club) | NYPL Events Calendar |
-| Lapsit Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/lapsit-storytime) | NYPL Events Calendar |
+| Caregiver Conversations with the Baby Meetup! | [Link](https://www.nypl.org/events/programs/2026/05/01/caregiver-conversations-baby-meetup) | NYPL Events Calendar |
+| Caregiver Conversations: Parent Support Circle | [Link](https://www.nypl.org/events/programs/2026/05/01/caregiver-conversations-parent-support-circle) | NYPL Events Calendar |
+| Checkmate: Open Play Chess! | [Link](https://www.nypl.org/events/programs/2026/05/01/checkmate-open-play-chess) | NYPL Events Calendar |
+| Coloring & Chat Time: Online Session | [Link](https://www.nypl.org/events/programs/2026/05/01/coloring-chat-time-online-session) | NYPL Events Calendar |
+| Coloring for Babies and Toddlers | [Link](https://www.nypl.org/events/programs/2026/05/01/coloring-babies-and-toddlers) | NYPL Events Calendar |
+| Computer Basics | [Link](https://www.nypl.org/events/programs/2026/05/01/computer-basics) | NYPL Events Calendar |
+| Computer Basics: Open Lab | [Link](https://www.nypl.org/events/programs/2026/05/01/computer-basics-open-lab) | NYPL Events Calendar |
+| Creative Aging: Dream Room Diorama Building at Woodlawn Heights Library | [Link](https://www.nypl.org/events/programs/2026/05/01/creative-aging-dream-room-diorama-building-woodlawn-heights-library) | NYPL Events Calendar |
+| Creative Aging: Visual Journalism and Research at Seward Park Library | [Link](https://www.nypl.org/events/programs/2026/05/01/creative-aging-visual-journalism-and-research-seward-park-library) | NYPL Events Calendar |
+| Drop-In Tech Help | [Link](https://www.nypl.org/events/programs/2026/05/01/drop-tech-help) | NYPL Events Calendar |
+| EN ESPAÑOL: Introducción a los conceptos básicos de accesibilidad del iPhone | [Link](https://www.nypl.org/events/programs/2026/05/01/en-espanol-introduccion-los-conceptos-basicos-de-accesibilidad-del-iphone) | NYPL Events Calendar |
+| Family Storytime @ City Island | [Link](https://www.nypl.org/events/programs/2026/05/01/clone-family-storytime-city-island) | NYPL Events Calendar |
+| Family Storytime! | [Link](https://www.nypl.org/events/programs/2026/05/01/family-storytime-0) | NYPL Events Calendar |
+| Film Friday: Disney's Lilo & Stitch | [Link](https://www.nypl.org/events/programs/2026/05/08/film-friday-disneys-lilo-stitch) | NYPL Events Calendar |
+| Free Friday Flicks | [Link](https://www.nypl.org/events/programs/2026/05/01/clone-free-friday-flicks) | NYPL Events Calendar |
+| Freestyle Friday | [Link](https://www.nypl.org/events/programs/2026/05/01/freestyle-friday) | NYPL Events Calendar |
+| Friday Crafternoon | [Link](https://www.nypl.org/events/programs/2026/05/01/friday-crafternoon) | NYPL Events Calendar |
+| Friday Flicks: The Warriors (1979) | [Link](https://www.nypl.org/events/programs/2026/05/01/friday-flicks-warriors-1979) | NYPL Events Calendar |
+| Gardening Club @ Carver Community Garden | [Link](https://www.nypl.org/events/programs/2026/04/24/gardening-club-carver-community-garden) | NYPL Events Calendar |
+| Heights Heritage Tour | [Link](https://www.nypl.org/events/programs/2026/05/01/heights-heritage-tour) | NYPL Events Calendar |
+| HIGH BEGINNER Level English Conversation Classes: We Speak NYC | [Link](https://www.nypl.org/events/programs/2026/05/01/high-beginner-level-english-conversation-classes-we-speak-nyc-0) | NYPL Events Calendar |
+| In Person: 2 Mile Walk Thru Historic Fordham Road: A Walking Tour 5-01-2026 | [Link](https://www.nypl.org/events/programs/2026/05/01/person-2-mile-walk-thru-historic-fordham-road-walking-tour-5-01-2026) | NYPL Events Calendar |
+| In Person: Friday Open Lab - Learning Databases | [Link](https://www.nypl.org/events/programs/2026/05/01/person-friday-open-lab-learning-databases) | NYPL Events Calendar |
+| Intermediate Level English Conversation Classes: We Speak NYC | [Link](https://www.nypl.org/events/programs/2026/05/01/intermediate-level-english-conversation-classes-we-speak-nyc) | NYPL Events Calendar |
+| Intermediate Microsoft Excel | [Link](https://www.nypl.org/events/programs/2026/05/01/intermediate-microsoft-excel) | NYPL Events Calendar |
+| Intermediate/Advanced Level Citizenship Test Preparation and U.S. History | [Link](https://www.nypl.org/events/programs/2026/05/01/intermediateadvanced-level-citizenship-test-preparation-and-us-history) | NYPL Events Calendar |
+| Lapsit Storytime: Itty Bitty Book Buddies | [Link](https://www.nypl.org/events/programs/2026/05/01/lapsit-storytime-itty-bitty-book-buddies) | NYPL Events Calendar |
+| Learn to play the Guitar | [Link](https://www.nypl.org/events/programs/2026/05/01/learn-play-guitar) | NYPL Events Calendar |
 | Library for the Performing Arts | [Link](https://www.nypl.org/events/programs/lpa) | NYPL Events Calendar |
-| Little Learners: Esther Crow: Move n' Groove with Puppets! | [Link](https://www.nypl.org/events/programs/2026/04/08/little-learners-esther-crow-move-n-groove-puppets) | NYPL Events Calendar |
-| Little Learners: Lavender Blues! | [Link](https://www.nypl.org/events/programs/2026/04/15/little-learners-lavender-blues) | NYPL Events Calendar |
-| Little Learners: Mozart for Munchkins Symphony Superstars | [Link](https://www.nypl.org/events/programs/2026/04/15/little-learners-mozart-munchkins-symphony-superstars) | NYPL Events Calendar |
-| Little Learners: Tiny Seeds, Big Feelings / Jóvenes Aprendices: Pequeñas Semillas, Grandes Sentimientos | [Link](https://www.nypl.org/events/programs/2026/04/08/little-learners-tiny-seeds-big-feelings-jovenes-aprendices-pequenas) | NYPL Events Calendar |
-| Little Movers | [Link](https://www.nypl.org/events/programs/2026/04/01/little-movers) | NYPL Events Calendar |
-| Little Movers Board Book Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/little-movers-board-book-storytime) | NYPL Events Calendar |
-| Little Movers Open Play | [Link](https://www.nypl.org/events/programs/2026/04/01/little-movers-open-play-0) | NYPL Events Calendar |
-| Little Movers Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/little-movers-storytime-6) | NYPL Events Calendar |
-| Little Movers Storytime: Pets | [Link](https://www.nypl.org/events/programs/2026/04/15/little-movers-storytime-pets) | NYPL Events Calendar |
-| Meet with our Social Work Student Intern | [Link](https://www.nypl.org/events/programs/2026/04/01/clone-meet-our-social-work-student-intern) | NYPL Events Calendar |
-| Microsoft Word for Beginners | [Link](https://www.nypl.org/events/programs/2026/04/01/microsoft-word-beginners) | NYPL Events Calendar |
-| Music & Movement: Family JAMboree (Online Registration Required) | [Link](https://www.nypl.org/events/programs/2026/04/15/music-movement-family-jamboree-online-registration-required) | NYPL Events Calendar |
-| One on One Tech Help at Morris Park | [Link](https://www.nypl.org/events/programs/2026/04/01/one-one-tech-help-morris-park) | NYPL Events Calendar |
-| Online Little Movers Storytime | [Link](https://www.nypl.org/events/programs/2026/04/15/online-little-movers-storytime) | NYPL Events Calendar |
-| Open Lab | [Link](https://www.nypl.org/events/programs/2026/04/01/open-lab) | NYPL Events Calendar |
-| Open Play | [Link](https://www.nypl.org/events/programs/2026/04/03/open-play) | NYPL Events Calendar |
-| Open Play for Babies and Toddlers | [Link](https://www.nypl.org/events/programs/2026/04/01/open-play-babies-and-toddlers) | NYPL Events Calendar |
-| Open Play: Baby and Toddler Play Date | [Link](https://www.nypl.org/events/programs/2026/04/15/open-play-baby-and-toddler-play-date) | NYPL Events Calendar |
-| Open Play: Stay & Play | [Link](https://www.nypl.org/events/programs/2026/04/01/open-play-stay-play) | NYPL Events Calendar |
-| Read the Room: Audiobook | [Link](https://www.nypl.org/events/programs/2026/04/01/read-room-audiobook) | NYPL Events Calendar |
-| SAT Prep for Teens | [Link](https://www.nypl.org/events/programs/2026/04/15/sat-prep-teens) | NYPL Events Calendar |
+| Little Learners: Tiny Seeds, Big Feelings / Jóvenes Aprendices: Pequeñas Semillas, Grandes Sentimientos | [Link](https://www.nypl.org/events/programs/2026/05/01/little-learners-tiny-seeds-big-feelings-jovenes-aprendices-pequenas) | NYPL Events Calendar |
+| Little Movers (Ticketed) | [Link](https://www.nypl.org/events/programs/2026/05/01/little-movers-ticketed) | NYPL Events Calendar |
+| Little Movers: Storytime! | [Link](https://www.nypl.org/events/programs/2026/05/01/little-movers-storytime-2) | NYPL Events Calendar |
+| Little Picassos | [Link](https://www.nypl.org/events/programs/2026/05/01/little-picassos) | NYPL Events Calendar |
+| Mahjong Mornings | [Link](https://www.nypl.org/events/programs/2026/05/01/clone-mahjong-mornings) | NYPL Events Calendar |
+| Mahjongg for Beginners 1: Learning the Tiles | [Link](https://www.nypl.org/events/programs/2026/05/01/mahjongg-beginners-1-learning-tiles) | NYPL Events Calendar |
+| Meet with a Social Work Intern (May 2026) | [Link](https://www.nypl.org/events/programs/2026/05/01/meet-social-work-intern-may-2026) | NYPL Events Calendar |
+| Muhlenberg Cinema Club: 'Arrival' | [Link](https://www.nypl.org/events/programs/2026/05/01/muhlenberg-cinema-club-arrival) | NYPL Events Calendar |
+| Online book discussion: Eileen by Ottessa Moshfegh | [Link](https://www.nypl.org/events/programs/2026/05/01/online-book-discussion-eileen-ottessa-moshfegh) | NYPL Events Calendar |
+| Open Book Hour - Adult Book Discussion | [Link](https://www.nypl.org/events/programs/2026/05/01/open-book-hour-adult-book-discussion) | NYPL Events Calendar |
+| Open Play | [Link](https://www.nypl.org/events/programs/2026/05/04/open-play-0) | NYPL Events Calendar |
+| Open Play Date | [Link](https://www.nypl.org/events/programs/2026/05/01/open-play-date) | NYPL Events Calendar |
+| Open Play: Free Play Friday | [Link](https://www.nypl.org/events/programs/2026/05/01/open-play-free-play-friday) | NYPL Events Calendar |
+| Open Play: Tots & Toys | [Link](https://www.nypl.org/events/programs/2026/05/01/open-play-tots-toys) | NYPL Events Calendar |
+| Open Play: Toy Time | [Link](https://www.nypl.org/events/programs/2026/05/01/open-play-toy-time) | NYPL Events Calendar |
+| Open Playtime | [Link](https://www.nypl.org/events/programs/2026/05/01/open-playtime) | NYPL Events Calendar |
+| Playdate at the Library | [Link](https://www.nypl.org/events/programs/2026/05/01/playdate-library) | NYPL Events Calendar |
+| Research Nonprofits, Funders, and Grants | [Link](https://www.nypl.org/events/programs/2026/05/01/research-nonprofits-funders-and-grants) | NYPL Events Calendar |
 | Schomburg Center | [Link](https://www.nypl.org/events/programs/schomburg) | NYPL Events Calendar |
-| Self-Assisted Tax Preparation with Campaign for Working Families | [Link](https://www.nypl.org/events/programs/2026/04/01/self-assisted-tax-preparation-campaign-working-families) | NYPL Events Calendar |
-| Seward Park Anime Club | [Link](https://www.nypl.org/events/programs/2026/04/01/clone-seward-park-anime-club) | NYPL Events Calendar |
-| Sewing Circle | [Link](https://www.nypl.org/events/programs/2026/04/15/sewing-circle) | NYPL Events Calendar |
-| Social Emotional Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/social-emotional-storytime) | NYPL Events Calendar |
-| Spectrum Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/spectrum-storytime) | NYPL Events Calendar |
-| Tax Preparation with Single Stop at Ottendorfer | [Link](https://www.nypl.org/events/programs/2026/04/01/tax-preparation-single-stop-ottendorfer) | NYPL Events Calendar |
-| Toddler Sing-Along | [Link](https://www.nypl.org/events/programs/2026/04/01/toddler-sing-along) | NYPL Events Calendar |
-| Toddler Storytime | [Link](https://www.nypl.org/events/programs/2026/04/01/toddler-storytime) | NYPL Events Calendar |
-| We Speak NYC English Conversation Groups | [Link](https://www.nypl.org/events/programs/2026/04/01/we-speak-nyc-english-conversation-groups) | NYPL Events Calendar |
-| Yarn and Beyond: Community Crochet | [Link](https://www.nypl.org/events/programs/2026/04/01/yarn-and-beyond-community-crochet) | NYPL Events Calendar |
-| A Queens Native Is Quietly Turning NYC’s Biggest ‘Book Desert’ Into A Neighborhood Arts Hub | [Link](https://secretnyc.co/worlds-borough-bookshop-jackson-heights-queens/) | SecretNYC (Things To Do) |
-| Dance Through DUMBO: NYC’s Newest Immersive Silent Disco Hits The Waterfront | [Link](https://secretnyc.co/the-circuit-silent-disco-dumbo-brooklyn/) | SecretNYC (Things To Do) |
-| NYC’s Most Viral Cherry Blossom Spot Just Hit Peak Bloom — Meet The Stunning Floral Terrace In SoHo Known As The ‘Parisian Oasis’ Of The City | [Link](https://secretnyc.co/laduree-soho-cherry-blossom-garden-nyc/) | SecretNYC (Things To Do) |
-| Our Secret Club Provides New Yorkers With Brilliant Perks And Benefits Across The City – Here Is What’s Currently Available | [Link](https://secretnyc.co/scret-club-nyc-perks-benefits-discounts/) | SecretNYC (Things To Do) |
-| The Largest Collection Of Cherry Blossoms In The Nation Is Throwing A Massive 50th Anniversary BloomFest Near NYC This Weekend —With Live Music, Food Vendors And A Front Row Seat To Their 5,000+ Pink Trees | [Link](https://secretnyc.co/bloomfest-cherry-blossom-festival-new-jersey-2026/) | SecretNYC (Things To Do) |
-| This 260-Mile Road Trip From NYC Leads To NY’s Top-Rated Weekend Escape — With 40-Acre Spring Gardens & Hidden Lakeside Vineyards | [Link](https://secretnyc.co/skaneateles-ny-best-small-town-weekend-escape-ny-2026-msn-ranking/) | SecretNYC (Things To Do) |
-| This 80,000-Plant ‘Purple Paradise’ Is A Slice Of Provence Just A Short Train Ride From NYC | [Link](https://secretnyc.co/long-island-lavender-farm-train-ride-nyc/) | SecretNYC (Things To Do) |
-| This Cozy East Harlem Gem Serves Massive Birria Tacos & A Family Mole Recipe Shipped Directly From Mexico | [Link](https://secretnyc.co/ollin-nyc-east-harlem/) | SecretNYC (Things To Do) |
-| This Scenic $47 Amtrak Ride From NYC Leads To A Massive Upstate NY Tulip Festival — 180,000 Blooms Returning For One Weekend Only | [Link](https://secretnyc.co/albany-tulip-festival-2026/) | SecretNYC (Things To Do) |
-| We’re Hosting An Exclusive Members-Only Gathering At One Of NYC’s Most Popular Jazz Nights – And You’re Invited! | [Link](https://secretnyc.co/secret-club-meet-up-jazz-room-nyc/) | SecretNYC (Things To Do) |
+| Shape Up NYC: Low Impact Dance Fitness | [Link](https://www.nypl.org/events/programs/2026/05/01/clone-shape-nyc-low-impact-dance-fitness) | NYPL Events Calendar |
+| Story Lab: Create, Capture & Stream Your Imagination | [Link](https://www.nypl.org/events/programs/2026/05/01/clone-story-lab-create-capture-stream-your-imagination) | NYPL Events Calendar |
+| Tech Connect: Open Lab | [Link](https://www.nypl.org/events/programs/2026/05/01/tech-connect-open-lab) | NYPL Events Calendar |
+| Teen Book Giveaway! | [Link](https://www.nypl.org/events/programs/2026/05/01/teen-book-giveaway) | NYPL Events Calendar |
+| The Weekly Reader | [Link](https://www.nypl.org/events/programs/2026/05/01/weekly-reader) | NYPL Events Calendar |
+| Tottenville Trot 2026: A Charming Walk Through Historic Tottenville | [Link](https://www.nypl.org/events/programs/2026/05/01/tottenville-trot-2026-charming-walk-through-historic-tottenville-0) | NYPL Events Calendar |
+| Toy Time!: Open Play for Little Ones | [Link](https://www.nypl.org/events/programs/2026/05/01/toy-time-open-play-little-ones) | NYPL Events Calendar |
+| Virtual Consultations with Business Librarians | [Link](https://www.nypl.org/events/programs/2026/05/01/clone-virtual-consultations-business-librarians) | NYPL Events Calendar |
+| Virtual Open Book Hour | [Link](https://www.nypl.org/events/programs/2026/05/01/virtual-open-book-hour) | NYPL Events Calendar |
+| Walk the Hall of Fame at Bronx Community College | [Link](https://www.nypl.org/events/programs/2026/05/01/walk-hall-fame-bronx-community-college) | NYPL Events Calendar |
+| Waterfront Walking Tour: Art and History in Battery Park City | [Link](https://www.nypl.org/events/programs/2026/05/01/waterfront-walking-tour-art-and-history-battery-park-city) | NYPL Events Calendar |
+| We Speak English Conversation Class | [Link](https://www.nypl.org/events/programs/2026/05/01/we-speak-english-conversation-class) | NYPL Events Calendar |
+| We Speak NYC | [Link](https://www.nypl.org/events/programs/2026/05/01/we-speak-nyc) | NYPL Events Calendar |
+| BURNOUT PARADISE IS THE WILDEST NIGHT OUT IN NYC (SPONSORED) | [Link](https://www.theskint.com/burnout-paradise-is-the-wildest-night-out-in-nyc-sponsored/) | The Skint |
 | CHEAP BUT CULTURED: THE 2026 WORLD VOICES FESTIVAL APRIL 29–MAY 2 (SPONSORED) | [Link](https://www.theskint.com/cheap-but-cultured-the-2026-world-voices-festival-april-29-may-2-sponsored/) | The Skint |
-| FIRST FRIDAYS AT THE FRICK COLLECTION! (SPONSORED) | [Link](https://www.theskint.com/first-fridays-at-the-frick-collection-sponsored-2/) | The Skint |
-| FRI-MON, 4/10-13: SKINT WEEKEND | [Link](https://www.theskint.com/fri-mon-4-10-13-skint-weekend/) | The Skint |
-| FRI-MON, 4/3-6: SKINT WEEKEND | [Link](https://www.theskint.com/fri-mon-4-3-6-skint-weekend/) | The Skint |
-| FROM WICKED TO MOZART: CONCERTS YOU’LL LOVE AT PRICES YOU CAN’T BEAT (SPONSORED) | [Link](https://www.theskint.com/from-wicked-to-mozart-concerts-youll-love-at-prices-you-cant-beat-sponsored/) | The Skint |
-| GET $40 TICKETS TO RHEOLOGY AT PLAYWRIGHTS HORIZONS (SPONSORED) | [Link](https://www.theskint.com/get-40-tickets-to-rheology-at-playwrights-horizons-sponsored/) | The Skint |
-| MON-WEDS, 4/14-16: FREE BEN + JERRY’S, JORDAN KLEPPER, CUMULO, AND MORE | [Link](https://www.theskint.com/mon-weds-4-14-16-free-ben-jerrys-jordan-klepper-cumulo-and-more/) | The Skint |
-| NYC, K-POP IS TAKING OVER UNITED PALACE (SPONSORED) | [Link](https://www.theskint.com/nyc-k-pop-is-taking-over-united-palace-sponsored/) | The Skint |
-| STÉPHANE WREMBEL’S DJANGO A GOGO (SPONSORED) | [Link](https://www.theskint.com/stephane-wrembels-django-a-gogo-sponsored-2/) | The Skint |
-| TUES-THURS, 4/7-9: DO FORESTS FEEL?, PERFORMANCE FESTS, ART FAIRS, AND MORE | [Link](https://www.theskint.com/tues-thurs-4-7-9-do-forests-feel-performance-fests-art-fairs-and-more/) | The Skint |
+| FIRST FRIDAYS AT THE FRICK COLLECTION! (SPONSORED) | [Link](https://www.theskint.com/first-fridays-at-the-frick-collection-sponsored-3/) | The Skint |
+| FREE MOVIES UNDER THE PALMS AT BROOKFIELD PLACE (SPONSORED) | [Link](https://www.theskint.com/free-movies-under-the-palms-at-brookfield-place/) | The Skint |
+| FRI-MON, 4/24-27: SKINT WEEKEND | [Link](https://www.theskint.com/fri-mon-4-24-27-skint-weekend/) | The Skint |
+| RAÚL ESPARZA, JAY O. SANDERS, AND MORE CELEBRATE SPRING WITH WNYC’S BRIAN LEHRER (SPONSORED) | [Link](https://www.theskint.com/raul-esparza-jay-o-sanders-and-more-celebrate-spring-with-wnycs-brian-lehrer-sponsored/) | The Skint |
+| TRADITIONAL IRISH MUSIC WITH CILLIAN VALLELY & KEVIN CRAWFORD (SPONSORED) | [Link](https://www.theskint.com/traditional-irish-music-with-cillian-vallely-kevin-crawford-sponsored/) | The Skint |
+| TUES-THURS, 4/21-23: $1 DONUTS, QUESTLOVE PRINCE TRIBUTE, MACY’S FLOWER SHOW, AND MORE | [Link](https://www.theskint.com/tues-thurs-4-21-23-1-donuts-questlove-prince-tribute-macys-flower-show-and-more/) | The Skint |
+| TUES-THURS, 4/28-30: ROOFTOP CINEMA, BRYANT PARK DANCE PARTIES, ANDY WARHOL: FAMILY ALBUM, AND MORE | [Link](https://www.theskint.com/tues-thurs-4-28-30-rooftop-cinema-bryant-park-dance-parties-andy-warhol-family-album-and-more/) | The Skint |
+| ★★★★ “A JOYFUL TESTAMENT TO PEOPLE POWER, A HEARTENING PARABLE ABOUT THE POSSIBILITY OF COLLECTIVE ACTION.” – THE GUARDIAN (SPONSORED) | [Link](https://www.theskint.com/%e2%98%85%e2%98%85%e2%98%85%e2%98%85-a-joyful-testament-to-people-power-a-heartening-parable-about-the-possibility-of-collective-action-the-guardian-sponsored/) | The Skint |
+| Charlie Goldsmith - Thrillist | [Link](https://news.google.com/rss/articles/CBMiYEFVX3lxTE5UZnJUdGxNdlRkblB3RDlUa0JBcXRhT2k1b3gxd2haOHdVdlU4M0J5RHZvWFAyQWJpSnlObWVhUkRSa2FsT1lGTFVTM1BxNWdFTEkxRUt3eHBJSWxqNzd5ag?oc=5) | Thrillist (Google News fallback) |
 | How an Arts and Culture Lover Should Spend Two Days in Santa Ana - Thrillist | [Link](https://news.google.com/rss/articles/CBMipwFBVV95cUxNd3pHLVZkM3BVT3FIaU10MHE1TXZkSnNFOFhZUXdwbzNGcHBEZmNDYWtiLVdXMkxlRUVSZ25uWGNHbXREMXY5UU1SVXFFdm9Od2M1S1p4YUNDVENXZGRHT1R6c3FnZ1ZOVmF2aDZ2cU44LVg0alhoY0hEazdYZ3VDMGl5OXBSTVN4ckRmekR1eGE4cFl2UlV1bHd6NFktaHROVkszQndFdw?oc=5) | Thrillist (Google News fallback) |
-| 1. JAPAN Fes | [Link](https://www.timeout.com/newyork/news/this-massive-japanese-street-food-festival-is-almost-back-031226) | Time Out (NYC events calendar) |
-| East Village | [Link](https://www.timeout.com/newyork/manhattan/east-village-manhattan-neighborhood-guide) | Time Out (NYC events calendar) |
+| How to Have the Best Group Trip Ever in Ann Arbor, Michigan - Thrillist | [Link](https://news.google.com/rss/articles/CBMif0FVX3lxTE1HdGVCTnVJanBYbFk2QlgwcVVmRG5qNlZlOWp0SmlGbWpnWUVsVlNvLTVQU0hxZVp0TXJDUGdoc1J1bE1ocnhxTEVSSENnbEptZS1lS3g5QmIyWl9mUlR2T0ZFbGlnczRsU1J6c0xUX1RRU0ZtVDhjd0wtOVBWTnM?oc=5) | Thrillist (Google News fallback) |
+| The Biggest Festivals Happening in Milwaukee This Summer - Thrillist | [Link](https://news.google.com/rss/articles/CBMinAFBVV95cUxOUko5eTJSY2poenFnRW9RZjBRRENtbzdyTlBxZnpQTzUzVWhWTUZ2Zzk1ZVJCWDNNa3dybzJ2bzdUX3FGNDdUTi1CYm5MSHZ1aDViVFFxaDg4X0o2RGJzRHhlNFlUV1BmMkZsSGJndUEtZzRDZlVINUZSVDYxcUtkaXZWc1N3MGVSa1VobHdzVGxiSUU2WjRKVzlHbzU?oc=5) | Thrillist (Google News fallback) |
+| 1. Stroll a night market | [Link](https://www.timeout.com/newyork/news/here-are-all-the-nyc-night-markets-to-indulge-in-this-summer-051823) | Time Out (NYC events calendar) |
 
 <!-- NYC_EVENTS_END -->
